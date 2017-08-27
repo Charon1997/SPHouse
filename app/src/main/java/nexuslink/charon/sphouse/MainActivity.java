@@ -1,6 +1,7 @@
 package nexuslink.charon.sphouse;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -38,8 +39,11 @@ public class MainActivity extends BaseActivity
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.main_fab:
-                Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, EatActivity.class);
+                startActivity(intent);
+
                 break;
             case R.id.nav_header_imageView:
                 showToast("image");
