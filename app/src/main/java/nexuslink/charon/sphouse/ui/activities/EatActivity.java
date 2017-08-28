@@ -1,32 +1,35 @@
-package nexuslink.charon.sphouse;
+package nexuslink.charon.sphouse.ui.activities;
 
 import android.content.Context;
-import android.icu.util.Calendar;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.TimePickerView;
-import com.bigkoo.pickerview.view.WheelTime;
-
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-import nexuslink.charon.sphouse.adapter.EatRecyclerViewAdapter;
+import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.bean.EatBean;
+import nexuslink.charon.sphouse.config.Session;
+import nexuslink.charon.sphouse.presenter.EatPresenter;
+import nexuslink.charon.sphouse.ui.adapter.EatRecyclerViewAdapter;
+import nexuslink.charon.sphouse.view.IEatView;
+
+import static nexuslink.charon.sphouse.config.Constant.EAT_INTAKE;
+import static nexuslink.charon.sphouse.config.Constant.EAT_TIME;
 
 /**
  * 项目名称：SPHouse
@@ -38,19 +41,21 @@ import nexuslink.charon.sphouse.bean.EatBean;
  * 修改备注：
  */
 
-public class EatActivity extends BaseActivity {
+public class EatActivity extends BaseActivity implements IEatView {
     private TextView mTvEatTime;
     private Button mBtPickTime;
-    private TimePickerView mTpv;
+
     private EditText mEtPickTime;
 
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private FloatingActionButton mFab;
+    private EatRecyclerViewAdapter adapter;
 
     //测试数据
     private List<EatBean> eatList;
     public static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private EatPresenter presenter;
 
     @Override
     public void widgetClick(View v) {
@@ -94,19 +99,10 @@ public class EatActivity extends BaseActivity {
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        EatRecyclerViewAdapter adapter = new EatRecyclerViewAdapter(eatList);
+        adapter = new EatRecyclerViewAdapter(eatList);
         mRecyclerView.setAdapter(adapter);
-//        mTpv = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
-//            @Override
-//            public void onTimeSelect(Date date, View v) {
-//                EditText et = (EditText) v;
-//                et.setText(getTime(date));
-//            }
-//        }).setTitleText("喂食时间")
-//                .setCancelText("取消")
-//                .setSubmitText("确认")
-//                .setType(new boolean[]{false, false, false, true, true, false})
-//                .setLabel("年", "月", "日", "时", "分", "秒").build();
+        presenter = new EatPresenter(this,eatList);
+
     }
 
     private void initData(int j) {
@@ -117,7 +113,7 @@ public class EatActivity extends BaseActivity {
 //            e.printStackTrace();
 //        }
         for (int i = 0;i < j;i++) {
-            Date date = new Date(2010, 11, 20, 4+j, 21, 41);
+            Date date = new Date(2010, 11, 20, 2+i, 23, 41);
             EatBean eatbean = new EatBean(20, date,false);
             eatList.add(eatbean);
         }
@@ -132,10 +128,7 @@ public class EatActivity extends BaseActivity {
         return result;
     }
 
-    private String getTime(Date date) {//可根据需要自行截取数据显示
-        SimpleDateFormat format = new SimpleDateFormat("dd日HH时mm分");
-        return format.format(date);
-    }
+
 
     @Override
     protected void onResume() {
@@ -149,5 +142,58 @@ public class EatActivity extends BaseActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("喂食");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_eat,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_eat:
+                showToast("喂食");
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        int position = adapter.getPosition();
+        switch (id) {
+            case 0:
+                showToast("编辑" + position);
+                presenter.toEdit(position);
+                break;
+            case 1:
+                showToast("删除" + position);
+                presenter.deleteItem(position);
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void loading(boolean loading) {
+
+    }
+
+    @Override
+    public void deleteItem(int position) {
+        adapter.notifyItemRemoved(position);
+        adapter.notifyItemRangeChanged(position,presenter.getListSize()-position);
+    }
+
+    @Override
+    public void toEdit(Date time, int foodIntake) {
+        Intent intent = new Intent(EatActivity.this, EatEditActivity.class);
+        Session session = Session.getSession();
+        session.put(EAT_TIME, time);
+        session.put(EAT_INTAKE, foodIntake);
+        startActivity(intent);
     }
 }

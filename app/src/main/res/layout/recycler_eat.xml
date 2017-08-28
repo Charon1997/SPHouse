@@ -6,6 +6,7 @@
     android:layout_height="48dp"
     android:layout_marginTop="@dimen/text_margin_8dp"
     android:layout_marginBottom="@dimen/text_margin_8dp"
+    android:id="@+id/item_lin_eat"
     >
             <TextView
                 android:layout_margin="@dimen/text_margin_8dp"

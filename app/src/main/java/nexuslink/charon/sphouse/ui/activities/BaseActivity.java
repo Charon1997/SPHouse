@@ -1,14 +1,11 @@
-package nexuslink.charon.sphouse;
+package nexuslink.charon.sphouse.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +13,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+
 /**
- * Created by Administrator on 2017/7/23.
+ * 项目名称：SPHouse
+ * 类描述：
+ * 创建人：Charon
+ * 创建时间：2017/8/25 20:28
+ * 修改人：Charon
+ * 修改时间：2017/8/25 20:28
+ * 修改备注：
  */
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
