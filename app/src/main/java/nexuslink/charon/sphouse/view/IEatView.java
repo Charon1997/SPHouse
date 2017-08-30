@@ -18,5 +18,7 @@ public interface  IEatView {
     void deleteItem(int position);
 
 
-    void toEdit(Date time,int foodIntake);
+    void toEdit(Date time,int foodIntake,int position,boolean isEdit);
+
+    void toEdit(boolean isEdit);
 }

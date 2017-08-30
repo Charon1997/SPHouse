@@ -15,6 +15,7 @@ import java.util.List;
 
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.bean.EatBean;
+import nexuslink.charon.sphouse.config.OnEatItemOnClickListener;
 
 /**
  * 项目名称：SPHouse
@@ -26,7 +27,8 @@ import nexuslink.charon.sphouse.bean.EatBean;
  * 修改备注：
  */
 
-public class EatRecyclerViewAdapter extends RecyclerView.Adapter {
+public class EatRecyclerViewAdapter extends RecyclerView.Adapter implements OnEatItemOnClickListener {
+    private OnEatItemOnClickListener itemOnClickListener;
     private static final String TAG = EatRecyclerViewAdapter.class.getSimpleName();
     private List<EatBean> eatBeanList;
     private int position;
@@ -55,6 +57,13 @@ public class EatRecyclerViewAdapter extends RecyclerView.Adapter {
                 return false;
             }
         });
+
+        ((MyViewHolder)holder).mLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClick(v,position);
+            }
+        });
     }
 
     private String getTime(Date date) {//可根据需要自行截取数据显示
@@ -65,6 +74,15 @@ public class EatRecyclerViewAdapter extends RecyclerView.Adapter {
     private String getIntake(int foodIntake) {
         return foodIntake + "g";
     }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        if (itemOnClickListener != null) {
+            itemOnClickListener.onItemClick(view,position);
+        }
+    }
+
+
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         private TextView mEtPickTime;
         private TextView mTvFoodIntake;
@@ -96,5 +114,9 @@ public class EatRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private void setPosition(int position) {
         this.position = position;
+    }
+
+    public void setOnEatItemOnClickListener(OnEatItemOnClickListener itemOnClickListener) {
+        this.itemOnClickListener = itemOnClickListener;
     }
 }

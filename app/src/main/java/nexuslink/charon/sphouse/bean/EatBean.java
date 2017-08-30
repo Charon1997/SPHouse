@@ -17,6 +17,11 @@ public class EatBean {
     private Date foodTime;
     private boolean isChanged;
 
+    public EatBean(int foodIntake, Date foodTime) {
+        this.foodIntake = foodIntake;
+        this.foodTime = foodTime;
+    }
+
     public EatBean(int foodIntake, Date foodTime, boolean isChanged) {
         this.foodIntake = foodIntake;
         this.foodTime = foodTime;

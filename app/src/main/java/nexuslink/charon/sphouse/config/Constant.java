@@ -13,4 +13,6 @@ package nexuslink.charon.sphouse.config;
 public class Constant {
     public static final String EAT_TIME = "EAT_TIME";
     public static final String EAT_INTAKE = "EAT_INTAKE";
+    public static final String EAT_POSITION = "EAT_POSITION";
+    public static final String EAT_EDIT = "EAT_EDIT";
 }

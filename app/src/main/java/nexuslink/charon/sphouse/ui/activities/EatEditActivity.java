@@ -1,7 +1,9 @@
 package nexuslink.charon.sphouse.ui.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
@@ -21,8 +23,12 @@ import java.util.List;
 
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
+import nexuslink.charon.sphouse.presenter.EatPresenter;
+import nexuslink.charon.sphouse.view.IEatEditView;
 
+import static nexuslink.charon.sphouse.config.Constant.EAT_EDIT;
 import static nexuslink.charon.sphouse.config.Constant.EAT_INTAKE;
+import static nexuslink.charon.sphouse.config.Constant.EAT_POSITION;
 import static nexuslink.charon.sphouse.config.Constant.EAT_TIME;
 
 /**
@@ -35,14 +41,16 @@ import static nexuslink.charon.sphouse.config.Constant.EAT_TIME;
  * 修改备注：
  */
 
-public class EatEditActivity extends BaseActivity {
-    private Date date;
-    private int foodIntake;
+public class EatEditActivity extends BaseActivity implements IEatEditView {
+    private boolean isEdit;
+    private Date mDate ;
+    private int foodIntake,position;
     private TimePickerView mTpvTime;
     private OptionsPickerView mOPVPick;
     private Toolbar mToolbar;
     private EditText mEtTime, mEtIntake;
     private List<Integer> intakeList;
+    private EatPresenter presenter = new EatPresenter(this);
 
     @Override
     public void widgetClick(View v) {
@@ -89,22 +97,30 @@ public class EatEditActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
         Session session = Session.getSession();
-        date = (Date) session.get(EAT_TIME);
-        foodIntake = (int) session.get(EAT_INTAKE);
-        session.cleanUpSession();
-
-        mEtTime.setText(getTime(date));
+        isEdit = (boolean) session.get(EAT_EDIT);
+        if (isEdit){
+            mDate = (Date) session.get(EAT_TIME);
+            foodIntake = (int) session.get(EAT_INTAKE);
+            position = (int) session.get(EAT_POSITION);
+        }else {
+            mDate = new Date(0,0,0,0,0,0);
+            foodIntake = 0;
+        }
+        mEtTime.setText(getTime(mDate));
         mEtIntake.setText(getIntake(foodIntake));
+        session.cleanUpSession();
 
         mEtIntake.setInputType(InputType.TYPE_NULL);
         mEtTime.setInputType(InputType.TYPE_NULL);
-        Log.d(TAG, "doBusiness: " + date + "intake" + foodIntake);
+
+        Log.d(TAG, "doBusiness: " + mDate + "intake" + foodIntake);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTime(mDate);
         mTpvTime = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
                 EditText et = (EditText) v;
+                mDate = date;
                 et.setText(getTime(date));
             }
         }).setTitleText("喂食时间")
@@ -118,6 +134,7 @@ public class EatEditActivity extends BaseActivity {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 EditText et = (EditText) v;
+                foodIntake = intakeList.get(options1);
                 et.setText(getIntake(intakeList.get(options1)));
             }
         }).setSelectOptions(foodIntake)
@@ -151,7 +168,7 @@ public class EatEditActivity extends BaseActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                showDialog();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -168,10 +185,50 @@ public class EatEditActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_eat_edit:
-                showToast("确定");
+                presenter.save(isEdit);
+                showToast("信息已保存");
+                finish();
                 break;
         }
         return true;
+    }
+
+    @Override
+    public Date getTime() {
+        return mDate;
+    }
+
+    @Override
+    public int getIntake() {
+        return foodIntake;
+    }
+    @Override
+    public int getPosition(){
+        return position;
+    }
+
+    public void showDialog(){
+        final AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(this);
+        normalDialog.setIcon(R.drawable.test_head_img);
+        normalDialog.setTitle("暂未保存");
+        normalDialog.setMessage("信息还未保存，是否退出？");
+        normalDialog.setPositiveButton("是",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //...To-do传入数据库，建立连接，退出
+                    finish();
+                    }
+                });
+        normalDialog.setNegativeButton("否",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        // 显示
+        normalDialog.show();
     }
 
 }

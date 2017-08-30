@@ -1,10 +1,13 @@
 package nexuslink.charon.sphouse.ui.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +15,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import nexuslink.charon.sphouse.R;
 
 
 /**
@@ -251,6 +256,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void setScreenRoate(boolean isAllowScreenRoate) {
         this.isAllowScreenRoate = isAllowScreenRoate;
     }
+
 
 
 

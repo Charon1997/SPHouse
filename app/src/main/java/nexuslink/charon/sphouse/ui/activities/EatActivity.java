@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,12 +24,15 @@ import java.util.List;
 
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.bean.EatBean;
+import nexuslink.charon.sphouse.config.OnEatItemOnClickListener;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.EatPresenter;
 import nexuslink.charon.sphouse.ui.adapter.EatRecyclerViewAdapter;
 import nexuslink.charon.sphouse.view.IEatView;
 
+import static nexuslink.charon.sphouse.config.Constant.EAT_EDIT;
 import static nexuslink.charon.sphouse.config.Constant.EAT_INTAKE;
+import static nexuslink.charon.sphouse.config.Constant.EAT_POSITION;
 import static nexuslink.charon.sphouse.config.Constant.EAT_TIME;
 
 /**
@@ -62,6 +66,7 @@ public class EatActivity extends BaseActivity implements IEatView {
         switch (v.getId()) {
             case R.id.eat_fab:
                 showToast("添加");
+                presenter.toEdit();
                 break;
         }
     }
@@ -95,13 +100,7 @@ public class EatActivity extends BaseActivity implements IEatView {
 
     @Override
     public void doBusiness(Context mContext) {
-        initData(4);
-        final LinearLayoutManager manager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new EatRecyclerViewAdapter(eatList);
-        mRecyclerView.setAdapter(adapter);
-        presenter = new EatPresenter(this,eatList);
+
 
     }
 
@@ -142,6 +141,28 @@ public class EatActivity extends BaseActivity implements IEatView {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("喂食");
+
+        presenter = new EatPresenter(this);
+        if (presenter.getEatList() != null) {
+            eatList = presenter.getEatList();
+            Log.d(TAG, "listSize: "+eatList.size());
+        }else {
+            initData(4);
+        }
+        final LinearLayoutManager manager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        Log.d(TAG, "doBusiness: adaper");
+
+        adapter = new EatRecyclerViewAdapter(eatList);
+        mRecyclerView.setAdapter(adapter);
+        presenter = new EatPresenter(this,eatList);
+        adapter.setOnEatItemOnClickListener(new OnEatItemOnClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                presenter.toEdit(position);
+            }
+        });
     }
 
     @Override
@@ -189,11 +210,22 @@ public class EatActivity extends BaseActivity implements IEatView {
     }
 
     @Override
-    public void toEdit(Date time, int foodIntake) {
+    public void toEdit(Date time, int foodIntake,int position,boolean isEdit) {
         Intent intent = new Intent(EatActivity.this, EatEditActivity.class);
         Session session = Session.getSession();
+        session.put(EAT_EDIT, isEdit);
         session.put(EAT_TIME, time);
         session.put(EAT_INTAKE, foodIntake);
+        session.put(EAT_POSITION,position);
         startActivity(intent);
     }
+    @Override
+    public void toEdit(boolean isEdit) {
+        Intent intent = new Intent(EatActivity.this, EatEditActivity.class);
+        Session session = Session.getSession();
+        session.put(EAT_EDIT, isEdit);
+        startActivity(intent);
+    }
+
+
 }

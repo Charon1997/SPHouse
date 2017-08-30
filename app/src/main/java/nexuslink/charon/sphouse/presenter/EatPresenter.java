@@ -3,6 +3,7 @@ package nexuslink.charon.sphouse.presenter;
 import java.util.List;
 
 import nexuslink.charon.sphouse.bean.EatBean;
+import nexuslink.charon.sphouse.view.IEatEditView;
 import nexuslink.charon.sphouse.view.IEatView;
 
 /**
@@ -17,11 +18,20 @@ import nexuslink.charon.sphouse.view.IEatView;
 
 public class EatPresenter {
     private IEatView eatView;
-    private List<EatBean> eatList;
+    private static List<EatBean> eatList;
+    private IEatEditView eatEditView;
+
+    public EatPresenter(IEatView eatView) {
+        this.eatView = eatView;
+    }
 
     public EatPresenter(IEatView eatView, List<EatBean> eatList) {
         this.eatView = eatView;
         this.eatList = eatList;
+    }
+
+    public EatPresenter(IEatEditView eatEditView) {
+        this.eatEditView = eatEditView;
     }
 
     public void deleteItem(int position) {
@@ -30,10 +40,31 @@ public class EatPresenter {
     }
 
     public void toEdit(int position) {
-        eatView.toEdit(eatList.get(position).getFoodTime(),eatList.get(position).getFoodIntake());
+        eatView.toEdit(eatList.get(position).getFoodTime(),eatList.get(position).getFoodIntake(),position,true);
+    }
+
+    public void toEdit() {
+        eatView.toEdit(false);
+    }
+
+    public void save(boolean isEdit) {
+        if (isEdit){
+            int position = eatEditView.getPosition();
+            eatList.get(position).setFoodIntake(eatEditView.getIntake());
+            eatList.get(position).setFoodTime(eatEditView.getTime());
+        } else {
+            EatBean eatBean = new EatBean(eatEditView.getIntake(),eatEditView.getTime());
+            eatList.add(eatBean);
+        }
     }
 
     public int getListSize() {
         return eatList.size();
+    }
+
+    public List<EatBean> getEatList() {
+        if (eatList != null)
+        return eatList;
+        else return null;
     }
 }
