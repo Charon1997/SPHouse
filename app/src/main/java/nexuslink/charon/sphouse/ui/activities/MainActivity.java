@@ -17,11 +17,15 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
 import nexuslink.charon.sphouse.R;
+import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.ui.adapter.MainViewPagerAdapter;
+import tech.linjiang.suitlines.SuitLines;
+import tech.linjiang.suitlines.Unit;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,15 +37,13 @@ public class MainActivity extends BaseActivity
     private TextView mTvName,mTvSub;
     private ImageView mIvHead;
     private List<View> list;
+    private SuitLines mSlWeight,mSlTemperature;
     @Override
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.main_fab:
-//                Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 Intent intent = new Intent(MainActivity.this, EatActivity.class);
                 startActivity(intent);
-
                 break;
             case R.id.nav_header_imageView:
                 showToast("image");
@@ -56,7 +58,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void initParam(Bundle param) {
+    public void initSession(Session session) {
 
     }
 
@@ -82,7 +84,6 @@ public class MainActivity extends BaseActivity
     @Override
     public void setListener() {
         mFab.setOnClickListener(this);
-
     }
 
     @Override
@@ -112,8 +113,22 @@ public class MainActivity extends BaseActivity
         //初始化list
         list = new ArrayList<>();
         View view = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
+        mSlWeight = (SuitLines) view.findViewById(R.id.weight_line_viewpager_main);
+        mSlTemperature = (SuitLines) view.findViewById(R.id.temperature_line_viewpager_main);
+        List<Unit> lines = new ArrayList<>();
+        for (int i = 0; i < 14; i++) {
+            lines.add(new Unit(new SecureRandom().nextInt(25), i + ""));
+        }
+        mSlTemperature.feedWithAnim(lines);
+        mSlWeight.feedWithAnim(lines);
+
         list.add(view);
+
+        View view1 = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
+        list.add(view1);
     }
+
+
 
     @Override
     public void onBackPressed() {

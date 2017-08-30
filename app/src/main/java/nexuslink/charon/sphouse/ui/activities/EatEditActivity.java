@@ -67,8 +67,16 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     }
 
     @Override
-    public void initParam(Bundle param) {
-
+    public void initSession(Session session) {
+        isEdit = (boolean) session.get(EAT_EDIT);
+        if (isEdit){
+            mDate = (Date) session.get(EAT_TIME);
+            foodIntake = (int) session.get(EAT_INTAKE);
+            position = (int) session.get(EAT_POSITION);
+        }else {
+            mDate = new Date(0,0,0,0,0,0);
+            foodIntake = 0;
+        }
     }
 
     @Override
@@ -96,19 +104,9 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
 
     @Override
     public void doBusiness(Context mContext) {
-        Session session = Session.getSession();
-        isEdit = (boolean) session.get(EAT_EDIT);
-        if (isEdit){
-            mDate = (Date) session.get(EAT_TIME);
-            foodIntake = (int) session.get(EAT_INTAKE);
-            position = (int) session.get(EAT_POSITION);
-        }else {
-            mDate = new Date(0,0,0,0,0,0);
-            foodIntake = 0;
-        }
+
         mEtTime.setText(getTime(mDate));
         mEtIntake.setText(getIntake(foodIntake));
-        session.cleanUpSession();
 
         mEtIntake.setInputType(InputType.TYPE_NULL);
         mEtTime.setInputType(InputType.TYPE_NULL);

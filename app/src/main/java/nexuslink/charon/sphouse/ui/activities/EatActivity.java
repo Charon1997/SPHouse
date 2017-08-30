@@ -72,9 +72,10 @@ public class EatActivity extends BaseActivity implements IEatView {
     }
 
     @Override
-    public void initParam(Bundle param) {
+    public void initSession(Session session) {
 
     }
+
 
     @Override
     public View bindView() {

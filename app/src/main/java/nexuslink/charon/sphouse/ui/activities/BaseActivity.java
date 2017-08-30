@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import nexuslink.charon.sphouse.R;
+import nexuslink.charon.sphouse.config.Session;
 
 
 /**
@@ -49,8 +50,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "BaseActivity-->onCreate()");
-        Bundle bundle = getIntent().getExtras();
-        initParam(bundle);
+        Session session = Session.getSession();
+        initSession(session);
+        session.cleanUpSession();
+        //Bundle bundle = getIntent().getExtras();
+        //initParam(bundle);
         View mView = bindView();
         if (null == mView) {
             mContextView = LayoutInflater.from(this)
@@ -73,6 +77,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
+     * [初始化数据]
+     * @param session
+     */
+    public abstract void initSession(Session session);
+
+    /**
      * [沉浸状态栏]
      */
     private void steepStatusBar() {
@@ -92,7 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      *
      * @param param
      */
-    public abstract void initParam(Bundle param);
+    //public abstract void initParam(Bundle param);
 
     /**
      * [绑定视图]
