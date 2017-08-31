@@ -2,9 +2,9 @@ package nexuslink.charon.sphouse.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,26 +18,43 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.security.SecureRandom;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import nexuslink.charon.sphouse.R;
+import nexuslink.charon.sphouse.bean.Dog;
+import nexuslink.charon.sphouse.config.ObservableScrollView;
+import nexuslink.charon.sphouse.config.ScrollViewListener;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.ui.adapter.MainViewPagerAdapter;
 import tech.linjiang.suitlines.SuitLines;
 import tech.linjiang.suitlines.Unit;
 
+import static nexuslink.charon.sphouse.config.Constant.*;
+
+/**
+ *图表有问题，可以改进
+ */
+
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ScrollViewListener {
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private FloatingActionButton mFab;
     private NavigationView mNavigationView;
     private ViewPager mViewPager;
-    private TextView mTvName,mTvSub;
-    private ImageView mIvHead;
+    private TextView mTvNavName,mTvNavSub,mTvDogName,mTvDogAge,mTvDogSex,mTvDogWeight;
+    private MainViewPagerAdapter mainViewPagerAdapter;
+    private ImageView mIvNavHead;
     private List<View> list;
     private SuitLines mSlWeight,mSlTemperature;
+    private ObservableScrollView scrollView;
+    private boolean isFabOut = false;
+    private List<Dog> dogList;
     @Override
     public void widgetClick(View v) {
         switch (v.getId()) {
@@ -96,39 +113,70 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
         View headerView = mNavigationView.getHeaderView(0);
-        mIvHead = (ImageView) headerView.findViewById(R.id.nav_header_imageView);
-        mTvName = (TextView) headerView.findViewById(R.id.nav_header_text_name);
-        mTvSub = (TextView) headerView.findViewById(R.id.nav_header_text_sub);
-        mTvName.setOnClickListener(this);
-        mTvSub.setOnClickListener(this);
-        mIvHead.setOnClickListener(this);
+        findNavId(headerView);
+
+        mTvNavName.setOnClickListener(this);
+        mTvNavSub.setOnClickListener(this);
+        mIvNavHead.setOnClickListener(this);
 
         addView();
-        MainViewPagerAdapter mainViewPagerAdapter = new MainViewPagerAdapter(list);
+        mainViewPagerAdapter = new MainViewPagerAdapter(list);
         mViewPager.setAdapter(mainViewPagerAdapter);
 
     }
 
+    private void findNavId(View headerView) {
+        mIvNavHead = (ImageView) headerView.findViewById(R.id.nav_header_imageView);
+        mTvNavName = (TextView) headerView.findViewById(R.id.nav_header_text_name);
+        mTvNavSub = (TextView) headerView.findViewById(R.id.nav_header_text_sub);
+    }
+
+
     private void addView() {
         //初始化list
         list = new ArrayList<>();
+        dogList = new ArrayList<>();
+        String dateString = "2013-03-06";
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = df.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         View view = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
-        mSlWeight = (SuitLines) view.findViewById(R.id.weight_line_viewpager_main);
-        mSlTemperature = (SuitLines) view.findViewById(R.id.temperature_line_viewpager_main);
+        Dog dog1 = new Dog("Vik",date,"女",21);
+        dogList.add(dog1);
+        findViewpagerId(view);
+
+        scrollView.setScrollViewListener(this);
         List<Unit> lines = new ArrayList<>();
-        for (int i = 0; i < 14; i++) {
-            lines.add(new Unit(new SecureRandom().nextInt(25), i + ""));
+        for (int i = 1; i <= 24; i++) {
+            lines.add(new Unit(new SecureRandom().nextInt(23)+18, i + ""));
         }
         mSlTemperature.feedWithAnim(lines);
         mSlWeight.feedWithAnim(lines);
 
         list.add(view);
 
-        View view1 = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
-        list.add(view1);
+//        View view1 = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
+//        list.add(view1);
     }
 
+    private void findViewpagerId(View view) {
+        scrollView = (ObservableScrollView) view.findViewById(R.id.scroll_view_viewpager_main);
+        mSlWeight = (SuitLines) view.findViewById(R.id.weight_line_viewpager_main);
+        mSlTemperature = (SuitLines) view.findViewById(R.id.temperature_line_viewpager_main);
+        mTvDogName = (TextView) view.findViewById(R.id.name_text_viewpager_main);
+        mTvDogAge = (TextView) view.findViewById(R.id.age_text_viewpager_main);
+        mTvDogSex = (TextView) view.findViewById(R.id.sex_text_viewpager_main);
+        mTvDogWeight = (TextView) view.findViewById(R.id.weight_text_viewpager_main);
 
+        mTvDogName.setText(dogList.get(0).getName());
+        mTvDogAge.setText(dogList.get(0).getAge()+"岁");
+        mTvDogSex.setText(dogList.get(0).getSex());
+        mTvDogWeight.setText(dogList.get(0).getWeight()+"kg");
+    }
 
     @Override
     public void onBackPressed() {
@@ -154,8 +202,21 @@ public class MainActivity extends BaseActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            int num = mViewPager.getCurrentItem();
+            Session session = Session.getSession();
+
+            session.put(MAIN_NAME, dogList.get(num).getName());
+            session.put(MAIN_BIRTHDAY, dogList.get(num).getBirthday());
+            session.put(MAIN_SEX, dogList.get(num).getSex());
+            session.put(MAIN_WEIGHT, dogList.get(num).getWeight());
+            Intent intent = new Intent(MainActivity.this, DogEditActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_scan) {
             return true;
         }
 
@@ -185,5 +246,18 @@ public class MainActivity extends BaseActivity
         }
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
+        int a = y - oldy;
+        Log.d(TAG, "onScrollChanged: y:"+a);
+        if (a > 7 && !isFabOut) {
+            isFabOut = true;
+            mFab.hide();
+        } else if (a < -7 && isFabOut) {
+            mFab.show();
+            isFabOut = false;
+        }
     }
 }

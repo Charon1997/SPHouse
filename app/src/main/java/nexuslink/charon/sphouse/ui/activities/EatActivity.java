@@ -148,7 +148,7 @@ public class EatActivity extends BaseActivity implements IEatView {
             eatList = presenter.getEatList();
             Log.d(TAG, "listSize: "+eatList.size());
         }else {
-            initData(4);
+            initData(15);
         }
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);

@@ -51,6 +51,7 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     private EditText mEtTime, mEtIntake;
     private List<Integer> intakeList;
     private EatPresenter presenter = new EatPresenter(this);
+    private boolean isChanged;
 
     @Override
     public void widgetClick(View v) {
@@ -117,9 +118,12 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
         mTpvTime = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                EditText et = (EditText) v;
-                mDate = date;
-                et.setText(getTime(date));
+                if (mDate != date) {
+                    mDate = date;
+                    EditText et = (EditText) v;
+                    et.setText(getTime(date));
+                    isChanged = true;
+                }
             }
         }).setTitleText("喂食时间")
                 .setCancelText("取消")
@@ -131,9 +135,13 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
         mOPVPick = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                EditText et = (EditText) v;
-                foodIntake = intakeList.get(options1);
-                et.setText(getIntake(intakeList.get(options1)));
+                if (foodIntake != intakeList.get(options1)) {
+                    EditText et = (EditText) v;
+                    foodIntake = intakeList.get(options1);
+                    et.setText(getIntake(intakeList.get(options1)));
+                    isChanged = true;
+                }
+
             }
         }).setSelectOptions(foodIntake)
                 .setTitleText("喂食量")
@@ -166,11 +174,15 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isChanged)
                 showDialog();
+                else finish();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (isEdit)
         getSupportActionBar().setTitle("编辑");
+        else getSupportActionBar().setTitle("添加");
     }
 
     @Override
@@ -182,7 +194,7 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_eat_edit:
+            case R.id.menu_save_edit:
                 presenter.save(isEdit);
                 showToast("信息已保存");
                 finish();
@@ -208,7 +220,7 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     public void showDialog(){
         final AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(this);
-        normalDialog.setIcon(R.drawable.test_head_img);
+        normalDialog.setIcon(R.drawable.doghouse_yellow_logo);
         normalDialog.setTitle("暂未保存");
         normalDialog.setMessage("信息还未保存，是否退出？");
         normalDialog.setPositiveButton("是",

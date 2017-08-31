@@ -15,4 +15,10 @@ public class Constant {
     public static final String EAT_INTAKE = "EAT_INTAKE";
     public static final String EAT_POSITION = "EAT_POSITION";
     public static final String EAT_EDIT = "EAT_EDIT";
+
+    public static final String MAIN_NAME = "MAIN_NAME";
+    public static final String MAIN_AGE = "MAIN_AGE";
+    public static final String MAIN_SEX = "MAIN_SEX";
+    public static final String MAIN_WEIGHT = "MAIN_WEIGHT";
+    public static final String MAIN_BIRTHDAY = "MAIN_BIRTHDAY";
 }

@@ -6,11 +6,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <nexuslink.charon.sphouse.config.ObservableScrollView
+        android:id="@+id/scroll_view_viewpager_main"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +29,7 @@
             tools:layout_editor_absoluteY="0dp">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/dog_img_viewpager_main"
                 android:layout_width="0dp"
                 android:layout_height="256dp"
                 android:layout_marginEnd="8dp"
@@ -44,7 +45,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/linearLayout"
+                android:id="@+id/information_linear_viewpager_main"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -56,7 +57,7 @@
                 android:orientation="vertical"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView">
+                app:layout_constraintTop_toBottomOf="@+id/dog_img_viewpager_main">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -71,17 +72,15 @@
                         android:layout_weight="1">
 
                         <TextView
-                            android:id="@+id/textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/text_margin_8dp"
                             android:text="名字"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_15sp"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                            android:textSize="@dimen/text_size_15sp" />
 
                         <TextView
+                            android:id="@+id/name_text_viewpager_main"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
@@ -97,21 +96,19 @@
                         android:layout_weight="1">
 
                         <TextView
-                            android:id="@+id/textView2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/text_margin_8dp"
                             android:text="年龄"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_15sp"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                            android:textSize="@dimen/text_size_15sp" />
 
                         <TextView
+                            android:id="@+id/age_text_viewpager_main"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="2"
+                            android:text="2岁"
                             android:textSize="@dimen/text_size_15sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -132,17 +129,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/text_margin_8dp"
-                            android:text="种类"
+                            android:text="性别"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_15sp"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                            android:textSize="@dimen/text_size_15sp" />
 
                         <TextView
+                            android:id="@+id/sex_text_viewpager_main"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="中华田园犬"
+                            android:text="女"
                             android:textSize="@dimen/text_size_15sp" />
                     </LinearLayout>
 
@@ -159,11 +155,10 @@
                             android:layout_marginLeft="@dimen/text_margin_8dp"
                             android:text="体重"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_15sp"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                            android:textSize="@dimen/text_size_15sp" />
 
                         <TextView
+                            android:id="@+id/weight_text_viewpager_main"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
@@ -187,14 +182,16 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/information_linear_viewpager_main" />
 
             <tech.linjiang.suitlines.SuitLines
                 android:id="@+id/weight_line_viewpager_main"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="-570dp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -203,50 +200,49 @@
                 line:Style="solid"
                 line:colorEdgeEffect="@color/colorPrimaryDark"
                 line:colorHint="@color/colorPrimary"
-                line:countOfY="3"
+                line:countOfY="6"
                 line:lineType="curve"
-                line:maxOfVisible="7"
+                line:maxOfVisible="24"
                 line:xyColor="@color/colorAccent"
-                line:xySize="15"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp" />
+                line:xySize="15" />
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="温度曲线"
                 android:textColor="@color/black"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/weight_line_viewpager_main"
-                app:layout_constraintHorizontal_bias="0.0"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp" />
+                app:layout_constraintTop_toBottomOf="@+id/weight_line_viewpager_main" />
+
             <tech.linjiang.suitlines.SuitLines
                 android:id="@+id/temperature_line_viewpager_main"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
-                android:layout_marginTop="7dp"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
-                android:layout_marginRight="8dp"
-                app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="7dp"
                 app:layout_constraintHorizontal_bias="0.0"
-                line:Style="DASHED"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                line:Style="dashed"
                 line:colorEdgeEffect="@color/colorPrimaryDark"
                 line:colorHint="@color/colorPrimary"
-                line:countOfY="3"
-                line:lineType="curve"
-                line:maxOfVisible="7"
+                line:countOfY="6"
+                line:lineType="segment"
+                line:maxOfVisible="24"
                 line:xyColor="@color/colorAccent"
-                line:xySize="15"/>
+                line:xySize="15" />
 
         </android.support.constraint.ConstraintLayout>
 
-    </ScrollView>
+    </nexuslink.charon.sphouse.config.ObservableScrollView>
 </android.support.constraint.ConstraintLayout>
