@@ -33,11 +33,13 @@ public class MainViewPagerAdapter extends PagerAdapter {
     public boolean isViewFromObject(View view, Object object) {
         return view == object;
     }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        container.addView(list.get(position),0);
-        return list.get(position );
+        container.addView(list.get(position), 0);
+        return list.get(position);
     }
+
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         View view = (View) object;

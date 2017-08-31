@@ -14,12 +14,10 @@ import java.util.Date;
  */
 
 public class DateGetAge {
-    public static int getAge(Date birthDay) throws Exception
-    {
+    public static int getAge(Date birthDay) throws Exception {
         Calendar cal = Calendar.getInstance();
 
-        if (cal.before(birthDay))
-        {
+        if (cal.before(birthDay)) {
             throw new IllegalArgumentException(
                     "The birthDay is before Now.It's unbelievable!");
         }
@@ -34,15 +32,11 @@ public class DateGetAge {
 
         int age = yearNow - yearBirth;
 
-        if (monthNow <= monthBirth)
-        {
-            if (monthNow == monthBirth)
-            {
+        if (monthNow <= monthBirth) {
+            if (monthNow == monthBirth) {
                 if (dayOfMonthNow < dayOfMonthBirth)
                     age--;
-            }
-            else
-            {
+            } else {
                 age--;
             }
         }

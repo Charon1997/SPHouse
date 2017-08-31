@@ -30,20 +30,32 @@ import nexuslink.charon.sphouse.config.Session;
  * 修改备注：
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
-    /** 是否沉浸状态栏 **/
+    /**
+     * 是否沉浸状态栏
+     **/
     private boolean isSetStatusBar = true;
-    /** 是否允许全屏 **/
+    /**
+     * 是否允许全屏
+     **/
     private boolean mAllowFullScreen = false;
-    /** 是否禁止旋转屏幕 **/
+    /**
+     * 是否禁止旋转屏幕
+     **/
     private boolean isAllowScreenRoate = true;
-    /** 当前Activity渲染的视图View **/
+    /**
+     * 当前Activity渲染的视图View
+     **/
     private View mContextView = null;
-    /** 日志输出标志 **/
+    /**
+     * 日志输出标志
+     **/
     protected final String TAG = this.getClass().getSimpleName();
 
-    /** View点击 **/
+    /**
+     * View点击
+     **/
     public abstract void widgetClick(View v);
 
     @Override
@@ -78,6 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     /**
      * [初始化数据]
+     *
      * @param session
      */
     public abstract void initSession(Session session);
@@ -129,10 +142,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * [绑定控件]
      *
      * @param resId
-     *
      * @return
      */
-    protected    <T extends View> T $(int resId) {
+    protected <T extends View> T $(int resId) {
         return (T) super.findViewById(resId);
     }
 
@@ -154,14 +166,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public abstract void doBusiness(Context mContext);
 
 
-
     /**
      * [页面跳转]
      *
      * @param clz
      */
     public void startActivity(Class<?> clz) {
-        startActivity(new Intent(BaseActivity.this,clz));
+        startActivity(new Intent(BaseActivity.this, clz));
     }
 
     /**
@@ -234,10 +245,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     /**
      * [简化Toast]
+     *
      * @param msg
      */
-    protected void showToast(String msg){
-        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+    protected void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -266,9 +278,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void setScreenRoate(boolean isAllowScreenRoate) {
         this.isAllowScreenRoate = isAllowScreenRoate;
     }
-
-
-
 
 
 }

@@ -13,5 +13,5 @@ import android.view.View;
  */
 
 public interface OnEatItemOnClickListener {
-    void onItemClick(View view,int position);
+    void onItemClick(View view, int position);
 }

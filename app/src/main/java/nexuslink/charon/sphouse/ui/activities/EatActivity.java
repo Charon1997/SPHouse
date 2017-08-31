@@ -112,9 +112,9 @@ public class EatActivity extends BaseActivity implements IEatView {
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
-        for (int i = 0;i < j;i++) {
-            Date date = new Date(2010, 11, 20, 2+i, 23, 41);
-            EatBean eatbean = new EatBean(20, date,false);
+        for (int i = 0; i < j; i++) {
+            Date date = new Date(2010, 11, 20, 2 + i, 23, 41);
+            EatBean eatbean = new EatBean(20, date, false);
             eatList.add(eatbean);
         }
     }
@@ -127,7 +127,6 @@ public class EatActivity extends BaseActivity implements IEatView {
         }
         return result;
     }
-
 
 
     @Override
@@ -146,8 +145,8 @@ public class EatActivity extends BaseActivity implements IEatView {
         presenter = new EatPresenter(this);
         if (presenter.getEatList() != null) {
             eatList = presenter.getEatList();
-            Log.d(TAG, "listSize: "+eatList.size());
-        }else {
+            Log.d(TAG, "listSize: " + eatList.size());
+        } else {
             initData(15);
         }
         final LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -157,7 +156,7 @@ public class EatActivity extends BaseActivity implements IEatView {
 
         adapter = new EatRecyclerViewAdapter(eatList);
         mRecyclerView.setAdapter(adapter);
-        presenter = new EatPresenter(this,eatList);
+        presenter = new EatPresenter(this, eatList);
         adapter.setOnEatItemOnClickListener(new OnEatItemOnClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -168,7 +167,7 @@ public class EatActivity extends BaseActivity implements IEatView {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_eat,menu);
+        getMenuInflater().inflate(R.menu.menu_eat, menu);
         return true;
     }
 
@@ -207,19 +206,20 @@ public class EatActivity extends BaseActivity implements IEatView {
     @Override
     public void deleteItem(int position) {
         adapter.notifyItemRemoved(position);
-        adapter.notifyItemRangeChanged(position,presenter.getListSize()-position);
+        adapter.notifyItemRangeChanged(position, presenter.getListSize() - position);
     }
 
     @Override
-    public void toEdit(Date time, int foodIntake,int position,boolean isEdit) {
+    public void toEdit(Date time, int foodIntake, int position, boolean isEdit) {
         Intent intent = new Intent(EatActivity.this, EatEditActivity.class);
         Session session = Session.getSession();
         session.put(EAT_EDIT, isEdit);
         session.put(EAT_TIME, time);
         session.put(EAT_INTAKE, foodIntake);
-        session.put(EAT_POSITION,position);
+        session.put(EAT_POSITION, position);
         startActivity(intent);
     }
+
     @Override
     public void toEdit(boolean isEdit) {
         Intent intent = new Intent(EatActivity.this, EatEditActivity.class);

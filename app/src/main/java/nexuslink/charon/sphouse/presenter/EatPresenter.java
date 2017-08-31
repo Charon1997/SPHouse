@@ -40,7 +40,7 @@ public class EatPresenter {
     }
 
     public void toEdit(int position) {
-        eatView.toEdit(eatList.get(position).getFoodTime(),eatList.get(position).getFoodIntake(),position,true);
+        eatView.toEdit(eatList.get(position).getFoodTime(), eatList.get(position).getFoodIntake(), position, true);
     }
 
     public void toEdit() {
@@ -48,12 +48,12 @@ public class EatPresenter {
     }
 
     public void save(boolean isEdit) {
-        if (isEdit){
+        if (isEdit) {
             int position = eatEditView.getPosition();
             eatList.get(position).setFoodIntake(eatEditView.getIntake());
             eatList.get(position).setFoodTime(eatEditView.getTime());
         } else {
-            EatBean eatBean = new EatBean(eatEditView.getIntake(),eatEditView.getTime());
+            EatBean eatBean = new EatBean(eatEditView.getIntake(), eatEditView.getTime());
             eatList.add(eatBean);
         }
     }
@@ -64,7 +64,7 @@ public class EatPresenter {
 
     public List<EatBean> getEatList() {
         if (eatList != null)
-        return eatList;
+            return eatList;
         else return null;
     }
 }

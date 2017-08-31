@@ -19,7 +19,7 @@
             android:layout_width="36dp"
             android:layout_height="match_parent"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/eat_time"
+            app:srcCompat="@drawable/name_dog_edit"
             />
         <TextView
             android:layout_marginStart="@dimen/text_margin_8dp"
@@ -55,7 +55,7 @@
             android:layout_width="36dp"
             android:layout_height="match_parent"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/dog_food"
+            app:srcCompat="@drawable/birthday_dog_edit"
             />
         <TextView
             android:layout_marginStart="@dimen/text_margin_8dp"
@@ -88,7 +88,7 @@
             android:layout_width="36dp"
             android:layout_height="match_parent"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/dog_food"
+            app:srcCompat="@drawable/sex_dog_edit"
             />
 
         <TextView
@@ -124,7 +124,7 @@
             android:layout_width="36dp"
             android:layout_height="match_parent"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/dog_food"
+            app:srcCompat="@drawable/weight_dog_edit"
             />
         <TextView
             android:layout_marginStart="@dimen/text_margin_8dp"

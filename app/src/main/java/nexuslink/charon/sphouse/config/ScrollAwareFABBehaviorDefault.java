@@ -26,11 +26,13 @@ import android.view.animation.AnimationSet;
 
 public class ScrollAwareFABBehaviorDefault extends FloatingActionButton.Behavior {
     private static final String TAG = ScrollAwareFABBehaviorDefault.class.getSimpleName();
+
     public ScrollAwareFABBehaviorDefault(Context context, AttributeSet attrs) {
         super();
     }
-    boolean isAnimatingOut=false;
-    private FastOutLinearInInterpolator folistener=new FastOutLinearInInterpolator();
+
+    boolean isAnimatingOut = false;
+    private FastOutLinearInInterpolator folistener = new FastOutLinearInInterpolator();
 
 
     @Override
@@ -46,25 +48,25 @@ public class ScrollAwareFABBehaviorDefault extends FloatingActionButton.Behavior
                                final View target, final int dxConsumed, final int dyConsumed,
                                final int dxUnconsumed, final int dyUnconsumed) {
         //super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-        Log.d(TAG, "onNestedScroll: "+dyConsumed+"un"+dyUnconsumed);
+        Log.d(TAG, "onNestedScroll: " + dyConsumed + "un" + dyUnconsumed);
         if (dyConsumed > 0 && !isAnimatingOut) {
             // User scrolled down and the FAB is currently visible -> hide the FAB
             //child.hide();
-            ObjectAnimator ob1 = ObjectAnimator.ofFloat(child,"ScaleX",1.0f,0.0f);
-            ObjectAnimator ob2 = ObjectAnimator.ofFloat(child,"ScaleY",1.0f,0.0f);
-            ObjectAnimator ob3 = ObjectAnimator.ofFloat(child,"Alpha",1.0f,0.0f);
+            ObjectAnimator ob1 = ObjectAnimator.ofFloat(child, "ScaleX", 1.0f, 0.0f);
+            ObjectAnimator ob2 = ObjectAnimator.ofFloat(child, "ScaleY", 1.0f, 0.0f);
+            ObjectAnimator ob3 = ObjectAnimator.ofFloat(child, "Alpha", 1.0f, 0.0f);
             AnimatorSet set = new AnimatorSet();
-            set.playTogether(ob1,ob2,ob3);
+            set.playTogether(ob1, ob2, ob3);
             set.setDuration(300);
             isAnimatingOut = true;
             set.start();
         } else if (dyConsumed < 0 && isAnimatingOut) {
             // User scrolled up and the FAB is currently not visible -> show the FAB
-            ObjectAnimator ob1 = ObjectAnimator.ofFloat(child,"ScaleX",0.0f,1.0f);
-            ObjectAnimator ob2 = ObjectAnimator.ofFloat(child,"ScaleY",0.0f,1.0f);
-            ObjectAnimator ob3 = ObjectAnimator.ofFloat(child,"Alpha",0.0f,1.0f);
+            ObjectAnimator ob1 = ObjectAnimator.ofFloat(child, "ScaleX", 0.0f, 1.0f);
+            ObjectAnimator ob2 = ObjectAnimator.ofFloat(child, "ScaleY", 0.0f, 1.0f);
+            ObjectAnimator ob3 = ObjectAnimator.ofFloat(child, "Alpha", 0.0f, 1.0f);
             AnimatorSet set = new AnimatorSet();
-            set.playTogether(ob1,ob2,ob3);
+            set.playTogether(ob1, ob2, ob3);
             set.setDuration(300);
             isAnimatingOut = false;
             set.start();
@@ -73,10 +75,6 @@ public class ScrollAwareFABBehaviorDefault extends FloatingActionButton.Behavior
 
 
     }
-
-
-
-
 
 
 }

@@ -46,11 +46,11 @@ public class EatRecyclerViewAdapter extends RecyclerView.Adapter implements OnEa
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder: "+getTime(eatBeanList.get(position).getFoodTime()));
-        ((MyViewHolder)holder).mEtPickTime.setText(getTime(eatBeanList.get(position).getFoodTime()));
-        ((MyViewHolder)holder).mTvFoodIntake.setText(getIntake(eatBeanList.get(position).getFoodIntake()));
+        Log.d(TAG, "onBindViewHolder: " + getTime(eatBeanList.get(position).getFoodTime()));
+        ((MyViewHolder) holder).mEtPickTime.setText(getTime(eatBeanList.get(position).getFoodTime()));
+        ((MyViewHolder) holder).mTvFoodIntake.setText(getIntake(eatBeanList.get(position).getFoodIntake()));
 
-        ((MyViewHolder)holder).mLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+        ((MyViewHolder) holder).mLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 setPosition(position);
@@ -58,10 +58,10 @@ public class EatRecyclerViewAdapter extends RecyclerView.Adapter implements OnEa
             }
         });
 
-        ((MyViewHolder)holder).mLinearLayout.setOnClickListener(new View.OnClickListener() {
+        ((MyViewHolder) holder).mLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClick(v,position);
+                onItemClick(v, position);
             }
         });
     }
@@ -78,7 +78,7 @@ public class EatRecyclerViewAdapter extends RecyclerView.Adapter implements OnEa
     @Override
     public void onItemClick(View view, int position) {
         if (itemOnClickListener != null) {
-            itemOnClickListener.onItemClick(view,position);
+            itemOnClickListener.onItemClick(view, position);
         }
     }
 
@@ -87,6 +87,7 @@ public class EatRecyclerViewAdapter extends RecyclerView.Adapter implements OnEa
         private TextView mEtPickTime;
         private TextView mTvFoodIntake;
         private LinearLayout mLinearLayout;
+
         public MyViewHolder(View itemView) {
             super(itemView);
             mEtPickTime = (TextView) itemView.findViewById(R.id.pick_time_text_eat);

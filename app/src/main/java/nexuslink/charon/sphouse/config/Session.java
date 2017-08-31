@@ -22,32 +22,35 @@ public class Session {
     //Attention here, DO NOT USE keyword 'new' to create this object.
 //Instead, use getSession method.
     @SuppressWarnings("unchecked")
-    private Session(){
+    private Session() {
         _objectContainer = new HashMap();
     }
 
-    public static Session getSession(){
+    public static Session getSession() {
 
-        if(session == null){
+        if (session == null) {
             session = new Session();
             return session;
-        }else{
+        } else {
             return session;
         }
     }
 
     @SuppressWarnings("unchecked")
-    public void put(Object key, Object value){
+    public void put(Object key, Object value) {
         _objectContainer.put(key, value);
     }
-    public Object get(Object key){
+
+    public Object get(Object key) {
 
         return _objectContainer.get(key);
     }
-    public void cleanUpSession(){
+
+    public void cleanUpSession() {
         _objectContainer.clear();
     }
-    public void remove(Object key){
+
+    public void remove(Object key) {
         _objectContainer.remove(key);
     }
 }

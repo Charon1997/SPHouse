@@ -30,37 +30,43 @@ import nexuslink.charon.sphouse.bean.Dog;
 import nexuslink.charon.sphouse.config.ObservableScrollView;
 import nexuslink.charon.sphouse.config.ScrollViewListener;
 import nexuslink.charon.sphouse.config.Session;
+import nexuslink.charon.sphouse.presenter.DogPresenter;
 import nexuslink.charon.sphouse.ui.adapter.MainViewPagerAdapter;
+import nexuslink.charon.sphouse.view.IMainView;
 import tech.linjiang.suitlines.SuitLines;
 import tech.linjiang.suitlines.Unit;
 
 import static nexuslink.charon.sphouse.config.Constant.*;
 
 /**
- *图表有问题，可以改进
+ * 图表有问题，可以改进
  */
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ScrollViewListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ScrollViewListener, IMainView {
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private FloatingActionButton mFab;
     private NavigationView mNavigationView;
     private ViewPager mViewPager;
-    private TextView mTvNavName,mTvNavSub,mTvDogName,mTvDogAge,mTvDogSex,mTvDogWeight;
+    private TextView mTvNavName, mTvNavSub, mTvDogName, mTvDogAge, mTvDogSex, mTvDogWeight;
     private MainViewPagerAdapter mainViewPagerAdapter;
     private ImageView mIvNavHead;
     private List<View> list;
-    private SuitLines mSlWeight,mSlTemperature;
+    private SuitLines mSlWeight, mSlTemperature;
     private ObservableScrollView scrollView;
     private boolean isFabOut = false;
-    private List<Dog> dogList;
+
+    private DogPresenter presenter;
+    //临时数据
+    private List<Dog> dogList = new ArrayList<>();
+
+
     @Override
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.main_fab:
-                Intent intent = new Intent(MainActivity.this, EatActivity.class);
-                startActivity(intent);
+                eat();
                 break;
             case R.id.nav_header_imageView:
                 showToast("image");
@@ -93,7 +99,7 @@ public class MainActivity extends BaseActivity
     public void initView(View view) {
         mToolbar = $(R.id.main_toolbar);
         mDrawer = $(R.id.drawer_layout);
-        mFab = $  (R.id.main_fab);
+        mFab = $(R.id.main_fab);
         mNavigationView = $(R.id.nav_view);
         mViewPager = $(R.id.viewpager_main);
     }
@@ -120,8 +126,7 @@ public class MainActivity extends BaseActivity
         mIvNavHead.setOnClickListener(this);
 
         addView();
-        mainViewPagerAdapter = new MainViewPagerAdapter(list);
-        mViewPager.setAdapter(mainViewPagerAdapter);
+
 
     }
 
@@ -131,12 +136,8 @@ public class MainActivity extends BaseActivity
         mTvNavSub = (TextView) headerView.findViewById(R.id.nav_header_text_sub);
     }
 
-
-    private void addView() {
-        //初始化list
-        list = new ArrayList<>();
-        dogList = new ArrayList<>();
-        String dateString = "2013-03-06";
+    private Date initDate(int year, int month, int day) {
+        String dateString = year + "-" + month + "-" + day;
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
@@ -144,26 +145,47 @@ public class MainActivity extends BaseActivity
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        View view = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
-        Dog dog1 = new Dog("Vik",date,"女",21);
-        dogList.add(dog1);
-        findViewpagerId(view);
+        return date;
+    }
 
-        scrollView.setScrollViewListener(this);
-        List<Unit> lines = new ArrayList<>();
-        for (int i = 1; i <= 24; i++) {
-            lines.add(new Unit(new SecureRandom().nextInt(23)+18, i + ""));
-        }
-        mSlTemperature.feedWithAnim(lines);
-        mSlWeight.feedWithAnim(lines);
+    private void addView() {
+
+
+        //初始化list
+        list = new ArrayList<>();
+        View view = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
+
+        //findViewpagerId(view);
 
         list.add(view);
 
-//        View view1 = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
-//        list.add(view1);
+        View view1 = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
+        list.add(view1);
+        mainViewPagerAdapter = new MainViewPagerAdapter(list);
+        mViewPager.setAdapter(mainViewPagerAdapter);
     }
 
-    private void findViewpagerId(View view) {
+    private void initDogList(int size) {
+        presenter = new DogPresenter(this);
+        if (presenter.getDogList() != null) {
+            dogList = presenter.getDogList();
+        } else {
+            for (int j = 0; j < size; j++) {
+                Dog dog1 = new Dog("Vik" + j, initDate(2015, 3 + j, 4), "女", 21 + j);
+                dogList.add(dog1);
+            }
+
+        }
+        presenter = new DogPresenter(dogList, this);
+
+        for (int i = 0; i < dogList.size(); i++) {
+            findViewpagerId(i);
+        }
+    }
+
+
+    private void findViewpagerId(int position) {
+        View view = list.get(position);
         scrollView = (ObservableScrollView) view.findViewById(R.id.scroll_view_viewpager_main);
         mSlWeight = (SuitLines) view.findViewById(R.id.weight_line_viewpager_main);
         mSlTemperature = (SuitLines) view.findViewById(R.id.temperature_line_viewpager_main);
@@ -172,10 +194,18 @@ public class MainActivity extends BaseActivity
         mTvDogSex = (TextView) view.findViewById(R.id.sex_text_viewpager_main);
         mTvDogWeight = (TextView) view.findViewById(R.id.weight_text_viewpager_main);
 
-        mTvDogName.setText(dogList.get(0).getName());
-        mTvDogAge.setText(dogList.get(0).getAge()+"岁");
-        mTvDogSex.setText(dogList.get(0).getSex());
-        mTvDogWeight.setText(dogList.get(0).getWeight()+"kg");
+        mTvDogName.setText(dogList.get(position).getName());
+        mTvDogAge.setText(dogList.get(position).getAge() + "岁");
+        mTvDogSex.setText(dogList.get(position).getSex());
+        mTvDogWeight.setText(dogList.get(position).getWeight() + "kg");
+        scrollView.setScrollViewListener(this);
+        List<Unit> lines = new ArrayList<>();
+        for (int i = 1; i <= 7; i++) {
+            lines.add(new Unit(new SecureRandom().nextInt(23) + 18, i + ""));
+        }
+
+        mSlTemperature.feedWithAnim(lines);
+        mSlWeight.feedWithAnim(lines);
     }
 
     @Override
@@ -202,19 +232,9 @@ public class MainActivity extends BaseActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            int num = mViewPager.getCurrentItem();
-            Session session = Session.getSession();
-
-            session.put(MAIN_NAME, dogList.get(num).getName());
-            session.put(MAIN_BIRTHDAY, dogList.get(num).getBirthday());
-            session.put(MAIN_SEX, dogList.get(num).getSex());
-            session.put(MAIN_WEIGHT, dogList.get(num).getWeight());
-            Intent intent = new Intent(MainActivity.this, DogEditActivity.class);
-            startActivity(intent);
+            editDog();
             return true;
         } else if (id == R.id.action_scan) {
             return true;
@@ -251,7 +271,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
         int a = y - oldy;
-        Log.d(TAG, "onScrollChanged: y:"+a);
+        Log.d(TAG, "onScrollChanged: y:" + a);
         if (a > 7 && !isFabOut) {
             isFabOut = true;
             mFab.hide();
@@ -259,5 +279,30 @@ public class MainActivity extends BaseActivity
             mFab.show();
             isFabOut = false;
         }
+    }
+
+    @Override
+    public void eat() {
+        Intent intent = new Intent(MainActivity.this, EatActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void editDog() {
+        int num = mViewPager.getCurrentItem();
+        Session session = Session.getSession();
+        session.put(MAIN_NAME, dogList.get(num).getName());
+        session.put(MAIN_BIRTHDAY, dogList.get(num).getBirthday());
+        session.put(MAIN_SEX, dogList.get(num).getSex());
+        session.put(MAIN_WEIGHT, dogList.get(num).getWeight());
+        session.put(MAIN_POSITION, num);
+        Intent intent = new Intent(MainActivity.this, DogEditActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initDogList(mainViewPagerAdapter.getCount());
     }
 }

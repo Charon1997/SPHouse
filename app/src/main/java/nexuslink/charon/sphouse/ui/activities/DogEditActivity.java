@@ -19,6 +19,8 @@ import java.util.List;
 
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
+import nexuslink.charon.sphouse.presenter.DogPresenter;
+import nexuslink.charon.sphouse.view.IDogEditView;
 
 import static nexuslink.charon.sphouse.config.Constant.*;
 
@@ -32,7 +34,7 @@ import static nexuslink.charon.sphouse.config.Constant.*;
  * 修改备注：
  */
 
-public class DogEditActivity extends BaseActivity {
+public class DogEditActivity extends BaseActivity implements IDogEditView {
     private String name, sex;
     private Date birthday;
     private int weight;
@@ -41,6 +43,8 @@ public class DogEditActivity extends BaseActivity {
     private OptionsPickerView mOpvSex, mOpvWeight;
     private TimePickerView mTpvAge;
     private List<Integer> ageList, weightList;
+    private DogPresenter presenter = new DogPresenter(this);
+    private int position;
 
     @Override
     public void widgetClick(View v) {
@@ -63,6 +67,7 @@ public class DogEditActivity extends BaseActivity {
         sex = (String) session.get(MAIN_SEX);
         birthday = (Date) session.get(MAIN_BIRTHDAY);
         weight = (int) session.get(MAIN_WEIGHT);
+        position = (int) session.get(MAIN_POSITION);
     }
 
     @Override
@@ -121,8 +126,12 @@ public class DogEditActivity extends BaseActivity {
         mOpvSex = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                EditText et = (EditText) v;
-                et.setText(sexList.get(options1));
+                if (!sex.equals(sexList.get(options1))) {
+                    EditText et = (EditText) v;
+                    et.setText(sexList.get(options1));
+                    sex = sexList.get(options1);
+                }
+
             }
         }).setSelectOptions(option)
                 .setTitleText("性别")
@@ -136,8 +145,13 @@ public class DogEditActivity extends BaseActivity {
         mOpvWeight = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                EditText et = (EditText) v;
-                et.setText(weightList.get(options1) + "kg");
+                if (weight != weightList.get(options1)) {
+                    EditText et = (EditText) v;
+                    et.setText(weightList.get(options1) + "kg");
+                    weight = weightList.get(options1);
+                }
+
+
             }
         }).setSelectOptions(weight)
                 .setTitleText("体重")
@@ -157,14 +171,17 @@ public class DogEditActivity extends BaseActivity {
     private void initOpvAge() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(birthday);
-        Date d = new Date(Calendar.YEAR-30,0,0);
+        final Date d = new Date(Calendar.YEAR - 30, 0, 0);
         Calendar lastCalendar = Calendar.getInstance();
         lastCalendar.setTime(d);
         mTpvAge = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                EditText et = (EditText) v;
-                et.setText(getTime(date));
+                if (birthday != date) {
+                    EditText et = (EditText) v;
+                    et.setText(getTime(date));
+                    birthday = date;
+                }
             }
         }).setTitleText("喂食时间")
                 .setCancelText("取消")
@@ -204,10 +221,42 @@ public class DogEditActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_edit:
+                presenter.save(position);
                 showToast("信息已保存");
                 finish();
                 break;
         }
         return true;
+    }
+
+
+    @Override
+    public void loading(boolean loading) {
+
+    }
+
+    @Override
+    public String getName() {
+        return mEtName.getText().toString();
+    }
+
+    @Override
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    @Override
+    public String getSex() {
+        return sex;
+    }
+
+    @Override
+    public int getWeight() {
+        return weight;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
     }
 }

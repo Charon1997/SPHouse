@@ -43,8 +43,8 @@ import static nexuslink.charon.sphouse.config.Constant.EAT_TIME;
 
 public class EatEditActivity extends BaseActivity implements IEatEditView {
     private boolean isEdit;
-    private Date mDate ;
-    private int foodIntake,position;
+    private Date mDate;
+    private int foodIntake, position;
     private TimePickerView mTpvTime;
     private OptionsPickerView mOPVPick;
     private Toolbar mToolbar;
@@ -70,12 +70,12 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     @Override
     public void initSession(Session session) {
         isEdit = (boolean) session.get(EAT_EDIT);
-        if (isEdit){
+        if (isEdit) {
             mDate = (Date) session.get(EAT_TIME);
             foodIntake = (int) session.get(EAT_INTAKE);
             position = (int) session.get(EAT_POSITION);
-        }else {
-            mDate = new Date(0,0,0,0,0,0);
+        } else {
+            mDate = new Date(0, 0, 0, 0, 0, 0);
             foodIntake = 0;
         }
     }
@@ -175,13 +175,13 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
             @Override
             public void onClick(View v) {
                 if (isChanged)
-                showDialog();
+                    showDialog();
                 else finish();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (isEdit)
-        getSupportActionBar().setTitle("编辑");
+            getSupportActionBar().setTitle("编辑");
         else getSupportActionBar().setTitle("添加");
     }
 
@@ -212,12 +212,13 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     public int getIntake() {
         return foodIntake;
     }
+
     @Override
-    public int getPosition(){
+    public int getPosition() {
         return position;
     }
 
-    public void showDialog(){
+    public void showDialog() {
         final AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(this);
         normalDialog.setIcon(R.drawable.doghouse_yellow_logo);
@@ -228,7 +229,7 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //...To-do传入数据库，建立连接，退出
-                    finish();
+                        finish();
                     }
                 });
         normalDialog.setNegativeButton("否",
