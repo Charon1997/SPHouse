@@ -33,11 +33,10 @@ import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.DogPresenter;
 import nexuslink.charon.sphouse.ui.adapter.MainViewPagerAdapter;
 import nexuslink.charon.sphouse.view.IMainView;
-import tech.linjiang.suitlines.SuitLines;
-import tech.linjiang.suitlines.Unit;
 
 import static nexuslink.charon.sphouse.config.Constant.*;
-
+import tech.linjiang.suitlines.SuitLines;
+import tech.linjiang.suitlines.Unit;
 /**
  * 图表有问题，可以改进
  */
@@ -200,12 +199,17 @@ public class MainActivity extends BaseActivity
         mTvDogWeight.setText(dogList.get(position).getWeight() + "kg");
         scrollView.setScrollViewListener(this);
         List<Unit> lines = new ArrayList<>();
-        for (int i = 1; i <= 7; i++) {
+        for (int i = 1; i <= 24; i++) {
             lines.add(new Unit(new SecureRandom().nextInt(23) + 18, i + ""));
         }
 
         mSlTemperature.feedWithAnim(lines);
-        mSlWeight.feedWithAnim(lines);
+
+        List<Unit> lines2 = new ArrayList<>();
+        for (int i = 1; i <= 7; i++) {
+            lines2.add(new Unit(new SecureRandom().nextInt(23) + 18, i + ""));
+        }
+        mSlWeight.feedWithAnim(lines2);
     }
 
     @Override
@@ -279,6 +283,11 @@ public class MainActivity extends BaseActivity
             mFab.show();
             isFabOut = false;
         }
+    }
+
+    @Override
+    public void loading(boolean loading) {
+
     }
 
     @Override
