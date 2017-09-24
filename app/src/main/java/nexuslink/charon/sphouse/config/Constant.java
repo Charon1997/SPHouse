@@ -22,4 +22,5 @@ public class Constant {
     public static final String MAIN_WEIGHT = "MAIN_WEIGHT";
     public static final String MAIN_BIRTHDAY = "MAIN_BIRTHDAY";
     public static final String MAIN_POSITION = "MAIN_POSITION";
+    public static final String MAIN_EDIT = "MAIN_EDIT";
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +27,13 @@ import java.util.Date;
 import java.util.List;
 
 import nexuslink.charon.sphouse.R;
-import nexuslink.charon.sphouse.bean.Dog;
+import nexuslink.charon.sphouse.bean.DogBean;
 import nexuslink.charon.sphouse.config.ObservableScrollView;
 import nexuslink.charon.sphouse.config.ScrollViewListener;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.DogPresenter;
 import nexuslink.charon.sphouse.ui.adapter.MainViewPagerAdapter;
+import nexuslink.charon.sphouse.utils.DataUtil;
 import nexuslink.charon.sphouse.view.IMainView;
 
 import static nexuslink.charon.sphouse.config.Constant.*;
@@ -43,6 +45,8 @@ import tech.linjiang.suitlines.Unit;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, ScrollViewListener, IMainView {
+    public static int mCurrentPager = 0;
+
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private FloatingActionButton mFab;
@@ -51,21 +55,23 @@ public class MainActivity extends BaseActivity
     private TextView mTvNavName, mTvNavSub, mTvDogName, mTvDogAge, mTvDogSex, mTvDogWeight;
     private MainViewPagerAdapter mainViewPagerAdapter;
     private ImageView mIvNavHead;
-    private List<View> list;
+    private List<View> list ;
     private SuitLines mSlWeight, mSlTemperature;
     private ObservableScrollView scrollView;
     private boolean isFabOut = false;
 
     private DogPresenter presenter;
     //临时数据
-    private List<Dog> dogList = new ArrayList<>();
+    private List<DogBean> dogList = new ArrayList<>();
 
 
     @Override
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.main_fab:
-                eat();
+                if (dogList.size() != 0)
+                    eat();
+                else showToast("请添加狗窝");
                 break;
             case R.id.nav_header_imageView:
                 showToast("image");
@@ -111,6 +117,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void doBusiness(Context mContext) {
         setSupportActionBar(mToolbar);
+        DataUtil.initDataBase();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -123,10 +130,6 @@ public class MainActivity extends BaseActivity
         mTvNavName.setOnClickListener(this);
         mTvNavSub.setOnClickListener(this);
         mIvNavHead.setOnClickListener(this);
-
-        addView();
-
-
     }
 
     private void findNavId(View headerView) {
@@ -148,38 +151,37 @@ public class MainActivity extends BaseActivity
     }
 
     private void addView() {
-
-
         //初始化list
         list = new ArrayList<>();
-        View view = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
 
         //findViewpagerId(view);
 
-        list.add(view);
-
-        View view1 = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
-        list.add(view1);
+        for (int i = 0; i < dogList.size(); i++) {
+            View view = LayoutInflater.from(this).inflate(R.layout.viewpager_main, null);
+            list.add(view);
+        }
         mainViewPagerAdapter = new MainViewPagerAdapter(list);
         mViewPager.setAdapter(mainViewPagerAdapter);
-    }
-
-    private void initDogList(int size) {
-        presenter = new DogPresenter(this);
-        if (presenter.getDogList() != null) {
-            dogList = presenter.getDogList();
-        } else {
-            for (int j = 0; j < size; j++) {
-                Dog dog1 = new Dog("Vik" + j, initDate(2015, 3 + j, 4), "女", 21 + j);
-                dogList.add(dog1);
-            }
-
-        }
-        presenter = new DogPresenter(dogList, this);
-
+        mViewPager.setCurrentItem(mCurrentPager);
         for (int i = 0; i < dogList.size(); i++) {
             findViewpagerId(i);
         }
+
+    }
+
+    private void initDogList() {
+        dogList = DataUtil.queryDogList();
+//        if (dogList.size() == 0) {
+//            DataUtil.insertDogData("Ck", initDate(2015, 3, 2), "男", 20);
+//        }
+//            for (int j = 0; j < size; j++) {
+//                DogBean dog1 = new DogBean("Vik" + j, initDate(2015, 3 + j, 4), "女", 21 + j);
+//                dogList.add(dog1);
+//            }
+        //dogList = DataUtil.queryDogList();
+        assert dogList != null;
+        Log.d(TAG, "initDogList: "+dogList.size());
+        presenter = new DogPresenter(dogList, this);
     }
 
 
@@ -199,7 +201,7 @@ public class MainActivity extends BaseActivity
         mTvDogWeight.setText(dogList.get(position).getWeight() + "kg");
         scrollView.setScrollViewListener(this);
         List<Unit> lines = new ArrayList<>();
-        for (int i = 1; i <= 24; i++) {
+        for (int i = 1; i <= 7; i++) {
             lines.add(new Unit(new SecureRandom().nextInt(23) + 18, i + ""));
         }
 
@@ -238,13 +240,32 @@ public class MainActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            editDog();
+            if (dogList.size() != 0) {
+                editDog();
+            } else showToast("请添加狗窝");
+
             return true;
         } else if (id == R.id.action_scan) {
+            if (dogList.size() == 2){
+                showToast("您已添加最大狗窝数");
+            } else addDog();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addDog() {
+        int num = 0;
+        if (dogList.size() == 0){
+            num = -1;
+        } else num = mViewPager.getCurrentItem();
+
+        Intent intent = new Intent(MainActivity.this, DogEditActivity.class);
+        Session session = Session.getSession();
+        session.put(MAIN_EDIT,false);
+        session.put(MAIN_POSITION,num);
+        startActivity(intent);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -262,6 +283,10 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
+            DataUtil.clearAll();
+            showToast("清楚所有数据");
+            initDogList();
+            addView();
 
         } else if (id == R.id.nav_send) {
 
@@ -292,26 +317,34 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void eat() {
+        int num = mViewPager.getCurrentItem();
+        Session session = Session.getSession();
+        session.put(MAIN_POSITION,num);
         Intent intent = new Intent(MainActivity.this, EatActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void editDog() {
-        int num = mViewPager.getCurrentItem();
-        Session session = Session.getSession();
-        session.put(MAIN_NAME, dogList.get(num).getName());
-        session.put(MAIN_BIRTHDAY, dogList.get(num).getBirthday());
-        session.put(MAIN_SEX, dogList.get(num).getSex());
-        session.put(MAIN_WEIGHT, dogList.get(num).getWeight());
-        session.put(MAIN_POSITION, num);
-        Intent intent = new Intent(MainActivity.this, DogEditActivity.class);
-        startActivity(intent);
+
+            int num = mViewPager.getCurrentItem();
+            Session session = Session.getSession();
+            session.put(MAIN_NAME, dogList.get(num).getName());
+            session.put(MAIN_BIRTHDAY, dogList.get(num).getBirthday());
+            session.put(MAIN_SEX, dogList.get(num).getSex());
+            session.put(MAIN_WEIGHT, dogList.get(num).getWeight());
+            session.put(MAIN_POSITION, num);
+            session.put(MAIN_EDIT,true);
+            Intent intent = new Intent(MainActivity.this, DogEditActivity.class);
+            startActivity(intent);
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initDogList(mainViewPagerAdapter.getCount());
+        initDogList();
+        addView();
     }
 }

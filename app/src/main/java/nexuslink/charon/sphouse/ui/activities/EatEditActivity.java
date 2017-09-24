@@ -30,6 +30,7 @@ import static nexuslink.charon.sphouse.config.Constant.EAT_EDIT;
 import static nexuslink.charon.sphouse.config.Constant.EAT_INTAKE;
 import static nexuslink.charon.sphouse.config.Constant.EAT_POSITION;
 import static nexuslink.charon.sphouse.config.Constant.EAT_TIME;
+import static nexuslink.charon.sphouse.config.Constant.MAIN_POSITION;
 
 /**
  * 项目名称：SPHouse
@@ -42,7 +43,9 @@ import static nexuslink.charon.sphouse.config.Constant.EAT_TIME;
  */
 
 public class EatEditActivity extends BaseActivity implements IEatEditView {
+    //是否已有数据
     private boolean isEdit;
+    private Long key;
     private Date mDate;
     private int foodIntake, position;
     private TimePickerView mTpvTime;
@@ -70,6 +73,7 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     @Override
     public void initSession(Session session) {
         isEdit = (boolean) session.get(EAT_EDIT);
+        key = (Long) session.get(MAIN_POSITION);
         if (isEdit) {
             mDate = (Date) session.get(EAT_TIME);
             foodIntake = (int) session.get(EAT_INTAKE);
@@ -195,7 +199,7 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_edit:
-                presenter.save(isEdit);
+                presenter.save(isEdit,key);
                 showToast("信息已保存");
                 finish();
                 break;

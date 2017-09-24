@@ -36,6 +36,7 @@ import static nexuslink.charon.sphouse.config.Constant.*;
 
 public class DogEditActivity extends BaseActivity implements IDogEditView {
     private String name, sex;
+    private boolean isEdit ;
     private Date birthday;
     private int weight;
     private Toolbar mToolbar;
@@ -63,11 +64,20 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
 
     @Override
     public void initSession(Session session) {
-        name = (String) session.get(MAIN_NAME);
-        sex = (String) session.get(MAIN_SEX);
-        birthday = (Date) session.get(MAIN_BIRTHDAY);
-        weight = (int) session.get(MAIN_WEIGHT);
+        isEdit = (boolean) session.get(MAIN_EDIT);
         position = (int) session.get(MAIN_POSITION);
+        if (isEdit){
+            name = (String) session.get(MAIN_NAME);
+            sex = (String) session.get(MAIN_SEX);
+            birthday = (Date) session.get(MAIN_BIRTHDAY);
+            weight = (int) session.get(MAIN_WEIGHT);
+        } else {
+            name = "";
+            sex = "男";
+            birthday = new Date(100, 0, 0, 0, 0, 0);
+            weight = 0;
+        }
+
     }
 
     @Override
@@ -204,6 +214,9 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (position == -1)
+                    position = 0;
+                MainActivity.mCurrentPager = position;
                 finish();
             }
         });
@@ -221,7 +234,8 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_edit:
-                presenter.save(position);
+                presenter.save(position,isEdit);
+
                 showToast("信息已保存");
                 finish();
                 break;

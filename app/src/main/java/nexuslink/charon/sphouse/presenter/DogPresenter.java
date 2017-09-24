@@ -1,10 +1,11 @@
 package nexuslink.charon.sphouse.presenter;
 
-import android.widget.ImageView;
 
 import java.util.List;
 
-import nexuslink.charon.sphouse.bean.Dog;
+import nexuslink.charon.sphouse.bean.DogBean;
+import nexuslink.charon.sphouse.ui.activities.MainActivity;
+import nexuslink.charon.sphouse.utils.DataUtil;
 import nexuslink.charon.sphouse.view.IDogEditView;
 import nexuslink.charon.sphouse.view.IMainView;
 
@@ -19,7 +20,7 @@ import nexuslink.charon.sphouse.view.IMainView;
  */
 
 public class DogPresenter {
-    private static List<Dog> dogList;
+    private static List<DogBean> dogList;
     private IMainView mainView;
     private IDogEditView dogEditView;
 
@@ -31,19 +32,30 @@ public class DogPresenter {
         this.dogEditView = dogEditView;
     }
 
-    public DogPresenter(List<Dog> dogList, IMainView mainView) {
+    public DogPresenter(List<DogBean> dogList, IMainView mainView) {
         this(mainView);
         DogPresenter.dogList = dogList;
     }
 
-    public void save(int position) {
-        dogList.get(position).setName(dogEditView.getName());
-        dogList.get(position).setBirthday(dogEditView.getBirthday());
-        dogList.get(position).setSex(dogEditView.getSex());
-        dogList.get(position).setWeight(dogEditView.getWeight());
+    public void save(int position,boolean isEdit) {
+        MainActivity.mCurrentPager = position+1;
+        if (isEdit){
+            Long key = (long) position;
+            DataUtil.updateDogName(key,dogEditView.getName());
+            DataUtil.updateDogSex(key,dogEditView.getSex());
+            DataUtil.updateDogBirthday(key, dogEditView.getBirthday());
+            DataUtil.updateDogWeight(key, dogEditView.getWeight());
+        } else {
+            DataUtil.insertDogData(dogEditView.getName(),dogEditView.getBirthday(),dogEditView.getSex(),dogEditView.getWeight());
+        }
+
+//        dogList.get(position).setName(dogEditView.getName());
+//        dogList.get(position).setBirthday(dogEditView.getBirthday());
+//        dogList.get(position).setSex(dogEditView.getSex());
+//        dogList.get(position).setWeight(dogEditView.getWeight());
     }
 
-    public List<Dog> getDogList() {
+    public List<DogBean> getDogList() {
         return dogList;
     }
 

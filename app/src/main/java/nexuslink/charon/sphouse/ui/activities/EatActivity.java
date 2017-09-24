@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,12 +29,14 @@ import nexuslink.charon.sphouse.config.OnEatItemOnClickListener;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.EatPresenter;
 import nexuslink.charon.sphouse.ui.adapter.EatRecyclerViewAdapter;
+import nexuslink.charon.sphouse.utils.DataUtil;
 import nexuslink.charon.sphouse.view.IEatView;
 
 import static nexuslink.charon.sphouse.config.Constant.EAT_EDIT;
 import static nexuslink.charon.sphouse.config.Constant.EAT_INTAKE;
 import static nexuslink.charon.sphouse.config.Constant.EAT_POSITION;
 import static nexuslink.charon.sphouse.config.Constant.EAT_TIME;
+import static nexuslink.charon.sphouse.config.Constant.MAIN_POSITION;
 
 /**
  * 项目名称：SPHouse
@@ -56,6 +59,9 @@ public class EatActivity extends BaseActivity implements IEatView {
     private FloatingActionButton mFab;
     private EatRecyclerViewAdapter adapter;
 
+    private int position;
+    private Long key;
+
     //测试数据
     private List<EatBean> eatList;
     public static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -73,7 +79,8 @@ public class EatActivity extends BaseActivity implements IEatView {
 
     @Override
     public void initSession(Session session) {
-
+        position = (int) session.get(MAIN_POSITION);
+        key = (long) position;
     }
 
 
@@ -105,18 +112,15 @@ public class EatActivity extends BaseActivity implements IEatView {
 
     }
 
-    private void initData(int j) {
-        eatList = new ArrayList<>();
+    private void initData() {
+        Date date = new Date(2010, 11, 20, 2 , 23, 41);
+        DataUtil.insertEatData(key,20, date);
+        eatList = DataUtil.queryEatList(key);
 //        try {
 //            date = dateFormat.parse("2017-05-30 05:30:30");
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
-        for (int i = 0; i < j; i++) {
-            Date date = new Date(2010, 11, 20, 2 + i, 23, 41);
-            EatBean eatbean = new EatBean(20, date, false);
-            eatList.add(eatbean);
-        }
     }
 
     public int getStatusBarHeight() {
@@ -133,6 +137,7 @@ public class EatActivity extends BaseActivity implements IEatView {
     protected void onResume() {
         super.onResume();
         setSupportActionBar(mToolbar);
+        MainActivity.mCurrentPager = position;
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,27 +147,25 @@ public class EatActivity extends BaseActivity implements IEatView {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("喂食");
 
-        presenter = new EatPresenter(this);
-        if (presenter.getEatList() != null) {
-            eatList = presenter.getEatList();
-            Log.d(TAG, "listSize: " + eatList.size());
-        } else {
-            initData(15);
-        }
+        eatList = DataUtil.queryEatList(key);
+
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         Log.d(TAG, "doBusiness: adaper");
 
-        adapter = new EatRecyclerViewAdapter(eatList);
-        mRecyclerView.setAdapter(adapter);
-        presenter = new EatPresenter(this, eatList);
-        adapter.setOnEatItemOnClickListener(new OnEatItemOnClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                presenter.toEdit(position);
-            }
-        });
+        if (eatList != null){
+            adapter = new EatRecyclerViewAdapter(eatList);
+            mRecyclerView.setAdapter(adapter);
+            presenter = new EatPresenter(this, eatList);
+            adapter.setOnEatItemOnClickListener(new OnEatItemOnClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    presenter.toEdit(position);
+                }
+            });
+        }
+
     }
 
     @Override
@@ -217,6 +220,7 @@ public class EatActivity extends BaseActivity implements IEatView {
         session.put(EAT_TIME, time);
         session.put(EAT_INTAKE, foodIntake);
         session.put(EAT_POSITION, position);
+        session.put(MAIN_POSITION,key);
         startActivity(intent);
     }
 
@@ -225,8 +229,7 @@ public class EatActivity extends BaseActivity implements IEatView {
         Intent intent = new Intent(EatActivity.this, EatEditActivity.class);
         Session session = Session.getSession();
         session.put(EAT_EDIT, isEdit);
+        session.put(MAIN_POSITION,key);
         startActivity(intent);
     }
-
-
 }

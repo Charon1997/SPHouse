@@ -3,6 +3,8 @@ package nexuslink.charon.sphouse.presenter;
 import java.util.List;
 
 import nexuslink.charon.sphouse.bean.EatBean;
+import nexuslink.charon.sphouse.ui.activities.MainActivity;
+import nexuslink.charon.sphouse.utils.DataUtil;
 import nexuslink.charon.sphouse.view.IEatEditView;
 import nexuslink.charon.sphouse.view.IEatView;
 
@@ -36,6 +38,7 @@ public class EatPresenter {
 
     public void deleteItem(int position) {
         eatList.remove(position);
+        DataUtil.deleteEatByKey((long)position);
         eatView.deleteItem(position);
     }
 
@@ -47,14 +50,14 @@ public class EatPresenter {
         eatView.toEdit(false);
     }
 
-    public void save(boolean isEdit) {
+    public void save(boolean isEdit,Long key) {
+        MainActivity.mCurrentPager = key.intValue();
         if (isEdit) {
             int position = eatEditView.getPosition();
-            eatList.get(position).setFoodIntake(eatEditView.getIntake());
-            eatList.get(position).setFoodTime(eatEditView.getTime());
+            DataUtil.updateEatIntake(key,position, eatEditView.getIntake());
+            DataUtil.updateEatTime(key,position,eatEditView.getTime());
         } else {
-            EatBean eatBean = new EatBean(eatEditView.getIntake(), eatEditView.getTime());
-            eatList.add(eatBean);
+            DataUtil.insertEatData(key,eatEditView.getIntake(), eatEditView.getTime());
         }
     }
 

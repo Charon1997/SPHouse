@@ -86,7 +86,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="Vik"
+                            android:text="暂无"
                             android:textSize="@dimen/text_size_15sp" />
                     </LinearLayout>
 
@@ -110,7 +110,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="2岁"
+                            android:text="暂无"
                             android:textSize="@dimen/text_size_15sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -140,7 +140,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="女"
+                            android:text="暂无"
                             android:textSize="@dimen/text_size_15sp" />
                     </LinearLayout>
 
@@ -164,7 +164,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="20kg"
+                            android:text="暂无"
                             android:textSize="@dimen/text_size_15sp" />
                     </LinearLayout>
                 </LinearLayout>
