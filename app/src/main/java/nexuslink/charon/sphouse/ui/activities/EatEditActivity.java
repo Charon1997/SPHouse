@@ -46,6 +46,7 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     //是否已有数据
     private boolean isEdit;
     private Long key;
+    private int dogPosition;
     private Date mDate;
     private int foodIntake, position;
     private TimePickerView mTpvTime;
@@ -73,10 +74,11 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     @Override
     public void initSession(Session session) {
         isEdit = (boolean) session.get(EAT_EDIT);
-        key = (Long) session.get(MAIN_POSITION);
+        dogPosition = (int) session.get(MAIN_POSITION);
         if (isEdit) {
             mDate = (Date) session.get(EAT_TIME);
             foodIntake = (int) session.get(EAT_INTAKE);
+            //ItemPosition
             position = (int) session.get(EAT_POSITION);
         } else {
             mDate = new Date(0, 0, 0, 0, 0, 0);
@@ -199,7 +201,7 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_edit:
-                presenter.save(isEdit,key);
+                presenter.save(isEdit,dogPosition,position);
                 showToast("信息已保存");
                 finish();
                 break;

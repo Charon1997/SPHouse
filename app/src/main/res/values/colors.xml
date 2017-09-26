@@ -6,4 +6,6 @@
     <color name="colorAccent">#6699CC</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="red">#E84835</color>
+    <color name="rose_red">#ec544d</color>
 </resources>

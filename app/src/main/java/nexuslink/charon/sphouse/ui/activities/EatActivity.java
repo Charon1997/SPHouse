@@ -2,14 +2,12 @@ package nexuslink.charon.sphouse.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +29,7 @@ import nexuslink.charon.sphouse.ui.adapter.EatRecyclerViewAdapter;
 import nexuslink.charon.sphouse.utils.DataUtil;
 import nexuslink.charon.sphouse.view.IEatView;
 
+import static nexuslink.charon.sphouse.config.Constant.DOG_SIZE;
 import static nexuslink.charon.sphouse.config.Constant.EAT_EDIT;
 import static nexuslink.charon.sphouse.config.Constant.EAT_INTAKE;
 import static nexuslink.charon.sphouse.config.Constant.EAT_POSITION;
@@ -59,8 +57,9 @@ public class EatActivity extends BaseActivity implements IEatView {
     private FloatingActionButton mFab;
     private EatRecyclerViewAdapter adapter;
 
-    private int position;
-    private Long key;
+    private int dogPosition;
+    private MainActivity main = new MainActivity();
+    private Long key = (long)0;
 
     //测试数据
     private List<EatBean> eatList;
@@ -79,8 +78,7 @@ public class EatActivity extends BaseActivity implements IEatView {
 
     @Override
     public void initSession(Session session) {
-        position = (int) session.get(MAIN_POSITION);
-        key = (long) position;
+        dogPosition = (int) session.get(MAIN_POSITION);
     }
 
 
@@ -113,9 +111,9 @@ public class EatActivity extends BaseActivity implements IEatView {
     }
 
     private void initData() {
-        Date date = new Date(2010, 11, 20, 2 , 23, 41);
-        DataUtil.insertEatData(key,20, date);
-        eatList = DataUtil.queryEatList(key);
+        Date date = new Date(2010, 11, 20, 2, 23, 41);
+        //DataUtil.insertEatData(key,20, date);
+        //eatList = DataUtil.queryEatList(key);
 //        try {
 //            date = dateFormat.parse("2017-05-30 05:30:30");
 //        } catch (ParseException e) {
@@ -137,7 +135,7 @@ public class EatActivity extends BaseActivity implements IEatView {
     protected void onResume() {
         super.onResume();
         setSupportActionBar(mToolbar);
-        MainActivity.mCurrentPager = position;
+        MainActivity.mCurrentPager = dogPosition;
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,14 +145,21 @@ public class EatActivity extends BaseActivity implements IEatView {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("喂食");
 
+        //doglistsize失效
+        if (MainActivity.mDogSize - 1 == dogPosition) {
+            Log.d(TAG, "onResume: keytrue");
+            key = (long) main.getDogId();
+        }
+        else key = (long) main.getDogId() - 1;
+
+        Log.d(TAG, "onResume: key"+key);
         eatList = DataUtil.queryEatList(key);
 
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        Log.d(TAG, "doBusiness: adaper");
 
-        if (eatList != null){
+        if (eatList != null) {
             adapter = new EatRecyclerViewAdapter(eatList);
             mRecyclerView.setAdapter(adapter);
             presenter = new EatPresenter(this, eatList);
@@ -195,7 +200,7 @@ public class EatActivity extends BaseActivity implements IEatView {
                 break;
             case 1:
                 showToast("删除" + position);
-                presenter.deleteItem(position);
+                presenter.deleteItem(key, position);
                 break;
         }
         return super.onContextItemSelected(item);
@@ -212,6 +217,12 @@ public class EatActivity extends BaseActivity implements IEatView {
         adapter.notifyItemRangeChanged(position, presenter.getListSize() - position);
     }
 
+    /**
+     * @param time       日期
+     * @param foodIntake 食量
+     * @param position   item位置
+     * @param isEdit     是否是编辑
+     */
     @Override
     public void toEdit(Date time, int foodIntake, int position, boolean isEdit) {
         Intent intent = new Intent(EatActivity.this, EatEditActivity.class);
@@ -220,16 +231,22 @@ public class EatActivity extends BaseActivity implements IEatView {
         session.put(EAT_TIME, time);
         session.put(EAT_INTAKE, foodIntake);
         session.put(EAT_POSITION, position);
-        session.put(MAIN_POSITION,key);
+        //dog的页数
+        session.put(MAIN_POSITION, dogPosition);
+
         startActivity(intent);
     }
 
+    /**
+     * addItem
+     * @param isEdit
+     */
     @Override
     public void toEdit(boolean isEdit) {
         Intent intent = new Intent(EatActivity.this, EatEditActivity.class);
         Session session = Session.getSession();
         session.put(EAT_EDIT, isEdit);
-        session.put(MAIN_POSITION,key);
+        session.put(MAIN_POSITION, dogPosition);
         startActivity(intent);
     }
 }

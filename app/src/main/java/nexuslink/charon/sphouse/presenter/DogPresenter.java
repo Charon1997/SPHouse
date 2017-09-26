@@ -1,6 +1,9 @@
 package nexuslink.charon.sphouse.presenter;
 
 
+import android.content.SharedPreferences;
+
+import java.security.Key;
 import java.util.List;
 
 import nexuslink.charon.sphouse.bean.DogBean;
@@ -38,14 +41,21 @@ public class DogPresenter {
     }
 
     public void save(int position,boolean isEdit) {
-        MainActivity.mCurrentPager = position+1;
+        MainActivity mainActivity = new MainActivity();
         if (isEdit){
-            Long key = (long) position;
+            Long key ;
+            if (DataUtil.getDogSize()-1 == position ){
+                key = (long)mainActivity.getDogId();
+            } else {
+                key = (long)mainActivity.getDogId()-1;
+            }
+            MainActivity.mCurrentPager = position;
             DataUtil.updateDogName(key,dogEditView.getName());
             DataUtil.updateDogSex(key,dogEditView.getSex());
             DataUtil.updateDogBirthday(key, dogEditView.getBirthday());
             DataUtil.updateDogWeight(key, dogEditView.getWeight());
         } else {
+            MainActivity.mCurrentPager = position+1;
             DataUtil.insertDogData(dogEditView.getName(),dogEditView.getBirthday(),dogEditView.getSex(),dogEditView.getWeight());
         }
 

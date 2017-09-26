@@ -1,12 +1,16 @@
 package nexuslink.charon.sphouse.ui.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
@@ -20,6 +24,7 @@ import java.util.List;
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.DogPresenter;
+import nexuslink.charon.sphouse.utils.DataUtil;
 import nexuslink.charon.sphouse.view.IDogEditView;
 
 import static nexuslink.charon.sphouse.config.Constant.*;
@@ -41,6 +46,7 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
     private int weight;
     private Toolbar mToolbar;
     private EditText mEtName, mEtAge, mEtSex, mEtWeight;
+    private TextView mTvDelete;
     private OptionsPickerView mOpvSex, mOpvWeight;
     private TimePickerView mTpvAge;
     private List<Integer> ageList, weightList;
@@ -51,13 +57,19 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.edit_age_dog_edit:
+                closeSoftInput();
                 mTpvAge.show(v);
                 break;
             case R.id.edit_sex_dog_edit:
+                closeSoftInput();
                 mOpvSex.show(v);
                 break;
             case R.id.edit_weight_dog_edit:
+                closeSoftInput();
                 mOpvWeight.show(v);
+                break;
+            case R.id.text_delete_dog_edit:
+                showDialog();
                 break;
         }
     }
@@ -97,6 +109,7 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         mEtAge = $(R.id.edit_age_dog_edit);
         mEtSex = $(R.id.edit_sex_dog_edit);
         mEtWeight = $(R.id.edit_weight_dog_edit);
+        mTvDelete = $(R.id.text_delete_dog_edit);
     }
 
     @Override
@@ -105,6 +118,7 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         mEtAge.setOnClickListener(this);
         mEtSex.setOnClickListener(this);
         mEtWeight.setOnClickListener(this);
+        mTvDelete.setOnClickListener(this);
     }
 
     @Override
@@ -113,6 +127,9 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         mEtAge.setText(getTime(birthday));
         mEtSex.setText(sex);
         mEtWeight.setText(weight + "kg");
+        if (!isEdit){
+            mTvDelete.setVisibility(View.GONE);
+        }
 
         mEtName.setSelection(mEtName.length());
         mEtAge.setInputType(InputType.TYPE_NULL);
@@ -193,7 +210,7 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
                     birthday = date;
                 }
             }
-        }).setTitleText("喂食时间")
+        }).setTitleText("生日")
                 .setCancelText("取消")
                 .setSubmitText("确认")
                 .setType(new boolean[]{true, true, true, false, false, false})
@@ -235,7 +252,6 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         switch (item.getItemId()) {
             case R.id.menu_save_edit:
                 presenter.save(position,isEdit);
-
                 showToast("信息已保存");
                 finish();
                 break;
@@ -272,5 +288,42 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
     @Override
     public int getPosition() {
         return position;
+    }
+
+    private void closeSoftInput() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    public void showDialog() {
+        final AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(this);
+        normalDialog.setIcon(R.drawable.doghouse_yellow_logo);
+        normalDialog.setTitle("删除狗窝");
+        normalDialog.setMessage("狗狗很想要个窝，是否删除？");
+        normalDialog.setPositiveButton("是",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //...To-do传入数据库，建立连接，退出
+                        MainActivity main = new MainActivity();
+                        if (DataUtil.getDogSize() -1 == position){
+                            DataUtil.deleteDogByKey((long)main.getDogId());
+                            main.saveDogId(main.getDogId() -1);
+                        } else {
+                            DataUtil.deleteDogByKey((long)main.getDogId()-1);
+                        }
+
+                        finish();
+                        showToast("已经删除"+mEtName.getText());
+                    }
+                });
+        normalDialog.setNegativeButton("否",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        // 显示
+        normalDialog.show();
     }
 }

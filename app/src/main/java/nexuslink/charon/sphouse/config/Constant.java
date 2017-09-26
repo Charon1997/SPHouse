@@ -23,4 +23,7 @@ public class Constant {
     public static final String MAIN_BIRTHDAY = "MAIN_BIRTHDAY";
     public static final String MAIN_POSITION = "MAIN_POSITION";
     public static final String MAIN_EDIT = "MAIN_EDIT";
+
+    public static final String DOG_ID = "DOG_ID";
+    public static final String DOG_SIZE = "DOG_SIZE";
 }

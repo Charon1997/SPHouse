@@ -1,5 +1,7 @@
 package nexuslink.charon.sphouse.utils;
 
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.greenrobot.greendao.query.Query;
@@ -13,6 +15,7 @@ import nexuslink.charon.accountbook.greendao.gen.DogBeanDao;
 import nexuslink.charon.accountbook.greendao.gen.EatBeanDao;
 import nexuslink.charon.sphouse.bean.DogBean;
 import nexuslink.charon.sphouse.bean.EatBean;
+import nexuslink.charon.sphouse.ui.activities.MainActivity;
 import nexuslink.charon.sphouse.utils.APP;
 
 /**
@@ -30,7 +33,7 @@ public class DataUtil {
     public static DogBeanDao mDogBeanDao;
     public static Query<EatBean> mEatBeanQuery;
     public static EatBeanDao mEatBeanDao;
-
+    public static MainActivity main = new MainActivity();
 
     /**
      * 初始化数据库
@@ -53,6 +56,7 @@ public class DataUtil {
     public static void insertDogData(String name, Date birthday, String sex, int weight ) {
         DogBean dogBean = new DogBean(null,name,birthday,sex,weight);
         mDogBeanDao.insert(dogBean);
+        main.saveDogId(main.getDogId()+1);
     }
 
     /**
@@ -62,7 +66,9 @@ public class DataUtil {
      * @param foodTime
      */
     public static void insertEatData(Long dogId, int foodIntake, Date foodTime ) {
+        Log.d("123", "insertEatData: dogId"+dogId);
         EatBean eatBean = new EatBean(null,dogId,foodIntake,foodTime);
+
         mEatBeanDao.insert(eatBean);
     }
 
@@ -72,9 +78,11 @@ public class DataUtil {
      */
     public static void deleteDogByKey(Long key) {
         mDogBeanDao.deleteByKey(key);
-        EatBean findEat = mEatBeanDao.queryBuilder().where(EatBeanDao.Properties.DogId.eq(key)).build().unique();
-        if (findEat != null) {
-            mEatBeanDao.delete(findEat);
+        List<EatBean> findEatList = mEatBeanDao.queryBuilder().where(EatBeanDao.Properties.DogId.eq(key)).build().list();
+        if (findEatList != null) {
+            for (int i = 0; i < findEatList.size() ; i++) {
+                mEatBeanDao.delete(findEatList.get(i));
+            }
         }
     }
 
@@ -82,45 +90,54 @@ public class DataUtil {
      * 根据id删除狗狗喂食信息
      * @param key
      */
-    public static void deleteEatByKey(Long key) {
-        mEatBeanDao.deleteByKey(key);
+    public static void deleteEatByKey(Long key,int position) {
+        List<EatBean> findEatList = mEatBeanDao.queryBuilder().where(EatBeanDao.Properties.DogId.eq(key)).build().list();
+        Log.d("123", "deleteEatByKey: "+findEatList.size());
+        for (int i = 0; i < findEatList.size(); i++) {
+            Log.d("123", "deleteEatByKey: "+findEatList.get(i).getId());
+        }
+        if (findEatList.size() > 0) {
+            mEatBeanDao.delete(findEatList.get(position));
+        }
     }
 
     public static void clearAll() {
         mEatBeanDao.deleteAll();
         mDogBeanDao.deleteAll();
+        main.saveDogId(0);
     }
 
     public static void updateDogName(Long id, String name) {
-        DogBean dogBean = mDogBeanDao.load(id);
+        DogBean dogBean = mDogBeanDao.queryBuilder().where(DogBeanDao.Properties.Id.eq(id)).unique();
         dogBean.setName(name);
         mDogBeanDao.update(dogBean);
     }
+
     public static void updateDogSex(Long id, String sex) {
-        DogBean dogBean = mDogBeanDao.load(id);
+        DogBean dogBean = mDogBeanDao.queryBuilder().where(DogBeanDao.Properties.Id.eq(id)).unique();
         dogBean.setSex(sex);
         mDogBeanDao.update(dogBean);
     }
     public static void updateDogBirthday(Long id, Date birthday) {
-        DogBean dogBean = mDogBeanDao.load(id);
+        DogBean dogBean = mDogBeanDao.queryBuilder().where(DogBeanDao.Properties.Id.eq(id)).unique();
         dogBean.setBirthday(birthday);
         mDogBeanDao.update(dogBean);
     }
     public static void updateDogWeight(Long id, int weight) {
-        DogBean dogBean = mDogBeanDao.load(id);
+        DogBean dogBean = mDogBeanDao.queryBuilder().where(DogBeanDao.Properties.Id.eq(id)).unique();
         dogBean.setWeight(weight);
         mDogBeanDao.update(dogBean);
     }
 
     public static void updateEatIntake(Long id,int position,int intake) {
-        DogBean dogBean = mDogBeanDao.load(id);
-        EatBean eatBean = dogBean.getEatBeanList().get(position);
+        List<EatBean> eatBeanList = mEatBeanDao.queryBuilder().where(EatBeanDao.Properties.DogId.eq(id)).build().list();
+        EatBean eatBean = eatBeanList.get(position);
         eatBean.setFoodIntake(intake);
         mEatBeanDao.update(eatBean);
     }
     public static void updateEatTime(Long id,int position ,Date time) {
-        DogBean dogBean = mDogBeanDao.load(id);
-        EatBean eatBean = dogBean.getEatBeanList().get(position);
+        List<EatBean> eatBeanList = mEatBeanDao.queryBuilder().where(EatBeanDao.Properties.DogId.eq(id)).build().list();
+        EatBean eatBean = eatBeanList.get(position);
         eatBean.setFoodTime(time);
         mEatBeanDao.update(eatBean);
     }
@@ -137,6 +154,25 @@ public class DataUtil {
             }
         }
         return beanList;
+    }
+
+    public static void showDogInf() {
+        List<DogBean> dogBeenList = queryDogList();
+        MainActivity main = new MainActivity();
+        Log.d("123", "showDogInf: "+"mDogId" + main.getDogId());
+        for (int i = 0; i <dogBeenList.size(); i++) {
+            DogBean dogBean = dogBeenList.get(i);
+            Log.d("123", "showDogInf: "+dogBean.getId()+dogBean.getName()  );
+            List<EatBean> eatBeanList = queryEatList((long)i+1);
+            for (int j = 0; j < eatBeanList.size(); j++) {
+                EatBean eatBean = eatBeanList.get(j);
+                Log.d("123", "showDogInf: "+eatBean.getId()+"dogid"+eatBean.getDogId()+"intake"+eatBean.getFoodIntake());
+            }
+        }
+    }
+
+    public static long getDogSize() {
+        return mDogBeanQuery.list().size();
     }
 
 }

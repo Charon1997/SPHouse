@@ -36,13 +36,19 @@ public class EatPresenter {
         this.eatEditView = eatEditView;
     }
 
-    public void deleteItem(int position) {
+    /**
+     * key 狗狗的position，position item 的
+     * @param key
+     * @param position
+     */
+    public void deleteItem(long key,int position) {
         eatList.remove(position);
-        DataUtil.deleteEatByKey((long)position);
+        DataUtil.deleteEatByKey(key,position);
         eatView.deleteItem(position);
     }
 
     public void toEdit(int position) {
+        //Bug
         eatView.toEdit(eatList.get(position).getFoodTime(), eatList.get(position).getFoodIntake(), position, true);
     }
 
@@ -50,13 +56,21 @@ public class EatPresenter {
         eatView.toEdit(false);
     }
 
-    public void save(boolean isEdit,Long key) {
-        MainActivity.mCurrentPager = key.intValue();
+    public void save(boolean isEdit,int dogPosition ,int position) {
+        MainActivity.mCurrentPager = dogPosition;
+        MainActivity main = new MainActivity();
+        long key;
+        if (MainActivity.mDogSize - 1 == dogPosition) {
+            key = main.getDogId();
+        } else key = main.getDogId()-1;
+
+
         if (isEdit) {
-            int position = eatEditView.getPosition();
+            //编辑
             DataUtil.updateEatIntake(key,position, eatEditView.getIntake());
             DataUtil.updateEatTime(key,position,eatEditView.getTime());
         } else {
+            //新建
             DataUtil.insertEatData(key,eatEditView.getIntake(), eatEditView.getTime());
         }
     }
