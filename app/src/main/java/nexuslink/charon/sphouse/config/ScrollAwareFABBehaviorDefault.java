@@ -48,7 +48,6 @@ public class ScrollAwareFABBehaviorDefault extends FloatingActionButton.Behavior
                                final View target, final int dxConsumed, final int dyConsumed,
                                final int dxUnconsumed, final int dyUnconsumed) {
         //super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-        Log.d(TAG, "onNestedScroll: " + dyConsumed + "un" + dyUnconsumed);
         if (dyConsumed > 0 && !isAnimatingOut) {
             // User scrolled down and the FAB is currently visible -> hide the FAB
             //child.hide();

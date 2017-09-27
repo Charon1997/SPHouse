@@ -20,5 +20,10 @@
 
     </style>
 
+    <style name="popupwindow_from_bottom">
+        <item name="android:windowEnterAnimation">@anim/popup_show_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/popup_hide_from_bottom</item>
+    </style>
+
 
 </resources>

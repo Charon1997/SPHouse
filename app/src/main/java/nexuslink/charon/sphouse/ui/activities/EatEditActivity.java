@@ -61,11 +61,9 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.edit_time_eat_edit:
-                showToast("time");
                 mTpvTime.show(v);
                 break;
             case R.id.edit_intake_eat_edit:
-                showToast("intake");
                 mOPVPick.show(v);
                 break;
         }

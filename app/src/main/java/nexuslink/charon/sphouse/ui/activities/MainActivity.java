@@ -1,11 +1,18 @@
 package nexuslink.charon.sphouse.ui.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +26,11 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,6 +39,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import kr.co.namee.permissiongen.PermissionFail;
+import kr.co.namee.permissiongen.PermissionGen;
+import kr.co.namee.permissiongen.PermissionSuccess;
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.bean.DogBean;
 import nexuslink.charon.sphouse.config.ObservableScrollView;
@@ -34,9 +49,11 @@ import nexuslink.charon.sphouse.config.ScrollViewListener;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.DogPresenter;
 import nexuslink.charon.sphouse.ui.adapter.MainViewPagerAdapter;
+import nexuslink.charon.sphouse.ui.popupwindow.MyPopupWindow;
 import nexuslink.charon.sphouse.utils.DataUtil;
 import nexuslink.charon.sphouse.view.IMainView;
 
+import static android.R.attr.path;
 import static nexuslink.charon.sphouse.config.Constant.*;
 
 import tech.linjiang.suitlines.SuitLines;
@@ -52,22 +69,27 @@ public class MainActivity extends BaseActivity
     public static int mDogId = 0;
     public static int mDogSize = 0;
 
+    private boolean isFabOut = false;
+    private int type;
+    private File file;
+    private Uri imgUri;
+
     private static SharedPreferences spre;
+
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private FloatingActionButton mFab;
     private NavigationView mNavigationView;
     private ViewPager mViewPager;
     private TextView mTvNavName, mTvNavSub, mTvDogName, mTvDogAge, mTvDogSex, mTvDogWeight;
-    private MainViewPagerAdapter mainViewPagerAdapter;
-    private ImageView mIvNavHead;
-    private List<View> list;
+    private ImageView mIvNavHead, mIvDogHead;
     private SuitLines mSlWeight, mSlTemperature;
     private ObservableScrollView scrollView;
-    private boolean isFabOut = false;
+    private MyPopupWindow mPopupWindow;
 
+    private MainViewPagerAdapter mainViewPagerAdapter;
+    private List<View> list;
     private DogPresenter presenter;
-    //临时数据
     private List<DogBean> dogList = new ArrayList<>();
 
 
@@ -108,6 +130,23 @@ public class MainActivity extends BaseActivity
             case R.id.nav_header_text_sub:
                 showToast("sub");
                 break;
+            case R.id.dog_img_viewpager_main:
+                mCurrentPager = mViewPager.getCurrentItem();
+                mPopupWindow = new MyPopupWindow(this, MainActivity.this);
+                mPopupWindow.showPopupWindow(LayoutInflater.from(this).inflate(R.layout.viewpager_main, null));
+                mPopupWindow.setOnGetTypeClickListener(new MyPopupWindow.onGetTypeClickListener() {
+                    @Override
+                    public void getType(int type) {
+                        MainActivity.this.type = type;
+                    }
+
+                    @Override
+                    public void getImgUri(Uri imgUri, File file) {
+                        MainActivity.this.file = file;
+                        MainActivity.this.imgUri = imgUri;
+                    }
+                });
+                break;
         }
     }
 
@@ -142,6 +181,12 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void doBusiness(Context mContext) {
+        PermissionGen.with(MainActivity.this)
+                .addRequestCode(100)
+                .permissions(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ).request();
+
         setSupportActionBar(mToolbar);
         DataUtil.initDataBase();
 
@@ -215,6 +260,7 @@ public class MainActivity extends BaseActivity
 
     private void findViewpagerId(int position) {
         View view = list.get(position);
+        Bitmap bitmap = readImage(position);
         scrollView = (ObservableScrollView) view.findViewById(R.id.scroll_view_viewpager_main);
         mSlWeight = (SuitLines) view.findViewById(R.id.weight_line_viewpager_main);
         mSlTemperature = (SuitLines) view.findViewById(R.id.temperature_line_viewpager_main);
@@ -222,12 +268,18 @@ public class MainActivity extends BaseActivity
         mTvDogAge = (TextView) view.findViewById(R.id.age_text_viewpager_main);
         mTvDogSex = (TextView) view.findViewById(R.id.sex_text_viewpager_main);
         mTvDogWeight = (TextView) view.findViewById(R.id.weight_text_viewpager_main);
+        mIvDogHead = (ImageView) view.findViewById(R.id.dog_img_viewpager_main);
 
         mTvDogName.setText(dogList.get(position).getName());
         mTvDogAge.setText(dogList.get(position).getAge() + "岁");
         mTvDogSex.setText(dogList.get(position).getSex());
         mTvDogWeight.setText(dogList.get(position).getWeight() + "kg");
         scrollView.setScrollViewListener(this);
+
+        if (bitmap != null) {
+            mIvDogHead.setImageBitmap(bitmap);
+        }
+
         List<Unit> lines = new ArrayList<>();
         for (int i = 1; i <= 7; i++) {
             lines.add(new Unit(new SecureRandom().nextInt(23) + 18, i + ""));
@@ -240,6 +292,8 @@ public class MainActivity extends BaseActivity
             lines2.add(new Unit(new SecureRandom().nextInt(23) + 18, i + ""));
         }
         mSlWeight.feedWithAnim(lines2);
+
+        mIvDogHead.setOnClickListener(this);
     }
 
     @Override
@@ -312,7 +366,7 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_share) {
             DataUtil.clearAll();
-            showToast("清楚所有数据");
+            showToast("清除所有数据");
             initDogList();
             addView();
         } else if (id == R.id.nav_send) {
@@ -375,7 +429,117 @@ public class MainActivity extends BaseActivity
         addView();
     }
 
-    private int getDogListSize() {
-        return dogList.size();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //选择了确定
+        if (resultCode == RESULT_OK) {
+            Log.d("123", requestCode + "code");
+            if (requestCode == 1) {
+                Log.d("123", imgUri.toString());
+                if (imgUri != null) {
+                    mPopupWindow.onPhoto(imgUri, 1430, 1100);
+                }
+            } else if (requestCode == 2) {
+                if (data != null) {
+                    Uri uri = data.getData();
+                    imgUri = uri;
+                    mPopupWindow.onPhoto(imgUri, 1430, 1100);
+                }
+            } else if (requestCode == 3) {
+                if (data != null) {
+                    //缩略图可用
+                    //Bundle extras = data.getExtras();
+                    //Bitmap bitmap = (Bitmap) extras.get("data");
+                    Bitmap bitmap = null;
+                    try {
+                        //通过uri直接获取bitmap
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (bitmap != null) {
+                        Log.d("123", "bitmap" + bitmap.toString());
+                        if (mCurrentPager == 0)
+                            //文件路径
+                            file = new File(Environment.getExternalStorageDirectory(),
+                                    DOG_IMAGE_0);
+                        else file = new File(Environment.getExternalStorageDirectory(),
+                                DOG_IMAGE_1);
+                        Log.d("123", "file" + file.getPath());
+
+                        try {
+                            saveImageToGallery(this, bitmap, file);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+    @PermissionSuccess(requestCode = 100)
+    public void doSomething() {
+        showToast("已经获取权限");
+    }
+
+    @PermissionFail(requestCode = 100)
+    public void doFailSomething(){
+        showToast("why???");
+    }
+
+
+    public static void saveImageToGallery(Context context, Bitmap bmp, File file) throws IOException {
+        // 首先保存图片
+        if (file.exists()) {
+            file.delete();
+        }
+        File files = new File(Environment.getExternalStorageDirectory(),
+                DOG_MULU);
+        files.mkdirs();
+        boolean create = file.createNewFile();
+        FileOutputStream fos = new FileOutputStream(file);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+        fos.flush();
+        fos.close();
+
+//        // 其次把文件插入到系统图库
+//        try {
+//            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+//                    file.getAbsolutePath(),System.currentTimeMillis()+".jpg", null);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        // 最后通知图库更新
+//        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+    }
+
+    private Bitmap readImage(int id) {
+        Bitmap bitmap = null;
+        if (id == 0)
+            //文件路径
+            file = new File(Environment.getExternalStorageDirectory(),
+                    DOG_IMAGE_0);
+        else file = new File(Environment.getExternalStorageDirectory(),
+                DOG_IMAGE_1);
+        Log.d(TAG, "readImage: " + file);
+
+        if (!file.exists())
+            return null;
+
+        try {
+            FileInputStream stream = new FileInputStream(file);
+            bitmap = BitmapFactory.decodeStream(stream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 }

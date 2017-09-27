@@ -2,9 +2,11 @@ package nexuslink.charon.sphouse.ui.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,7 +44,7 @@ import static nexuslink.charon.sphouse.config.Constant.*;
 
 public class DogEditActivity extends BaseActivity implements IDogEditView {
     private String name, sex;
-    private boolean isEdit ;
+    private boolean isEdit;
     private Date birthday;
     private int weight;
     private Toolbar mToolbar;
@@ -78,7 +81,7 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
     public void initSession(Session session) {
         isEdit = (boolean) session.get(MAIN_EDIT);
         position = (int) session.get(MAIN_POSITION);
-        if (isEdit){
+        if (isEdit) {
             name = (String) session.get(MAIN_NAME);
             sex = (String) session.get(MAIN_SEX);
             birthday = (Date) session.get(MAIN_BIRTHDAY);
@@ -86,7 +89,7 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         } else {
             name = "";
             sex = "男";
-            birthday = new Date(100, 0, 0, 0, 0, 0);
+            birthday = new Date(100, 0, 1, 0, 0, 0);
             weight = 0;
         }
 
@@ -127,7 +130,7 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         mEtAge.setText(getTime(birthday));
         mEtSex.setText(sex);
         mEtWeight.setText(weight + "kg");
-        if (!isEdit){
+        if (!isEdit) {
             mTvDelete.setVisibility(View.GONE);
         }
 
@@ -251,7 +254,7 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_edit:
-                presenter.save(position,isEdit);
+                presenter.save(position, isEdit);
                 showToast("信息已保存");
                 finish();
                 break;
@@ -306,15 +309,30 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
                     public void onClick(DialogInterface dialog, int which) {
                         //...To-do传入数据库，建立连接，退出
                         MainActivity main = new MainActivity();
-                        if (DataUtil.getDogSize() -1 == position){
-                            DataUtil.deleteDogByKey((long)main.getDogId());
-                            main.saveDogId(main.getDogId() -1);
+                        if (DataUtil.getDogSize() - 1 == position) {
+                            DataUtil.deleteDogByKey((long) main.getDogId());
+                            main.saveDogId(main.getDogId() - 1);
                         } else {
-                            DataUtil.deleteDogByKey((long)main.getDogId()-1);
+                            DataUtil.deleteDogByKey((long) main.getDogId() - 1);
+                        }
+                        File file = null;
+                        Log.d(TAG, "onClick: "+MainActivity.mCurrentPager);
+                        if (position == 0) {
+                            file = new File(Environment.getExternalStorageDirectory(),
+                                    DOG_IMAGE_0);
+                            file.delete();
+                            file = new File(Environment.getExternalStorageDirectory(),
+                                    DOG_IMAGE_1);
+                            file.renameTo(new File(Environment.getExternalStorageDirectory(),
+                                    DOG_IMAGE_0));
+                        } else {
+                            file = new File(Environment.getExternalStorageDirectory(),
+                                    DOG_IMAGE_1);
+                            file.delete();
                         }
 
                         finish();
-                        showToast("已经删除"+mEtName.getText());
+                        showToast("已经删除" + mEtName.getText());
                     }
                 });
         normalDialog.setNegativeButton("否",

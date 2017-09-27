@@ -26,4 +26,11 @@ public class Constant {
 
     public static final String DOG_ID = "DOG_ID";
     public static final String DOG_SIZE = "DOG_SIZE";
+
+    public static final int PHONE = 0x00;
+    public static final int CAMERA = 0x01;
+
+    public static final String DOG_MULU = "com.nexuslink.charon.sphouse/doghead/";
+    public static final String DOG_IMAGE_0 = "com.nexuslink.charon.sphouse/doghead/image0.jpg";
+    public static final String DOG_IMAGE_1 = "com.nexuslink.charon.sphouse/doghead/image1.jpg";
 }

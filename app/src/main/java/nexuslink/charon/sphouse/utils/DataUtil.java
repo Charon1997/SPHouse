@@ -1,11 +1,13 @@
 package nexuslink.charon.sphouse.utils;
 
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.greenrobot.greendao.query.Query;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,8 @@ import nexuslink.charon.sphouse.bean.DogBean;
 import nexuslink.charon.sphouse.bean.EatBean;
 import nexuslink.charon.sphouse.ui.activities.MainActivity;
 import nexuslink.charon.sphouse.utils.APP;
+
+import static nexuslink.charon.sphouse.config.Constant.DOG_MULU;
 
 /**
  * 项目名称：SPHouse
@@ -104,7 +108,25 @@ public class DataUtil {
     public static void clearAll() {
         mEatBeanDao.deleteAll();
         mDogBeanDao.deleteAll();
+        File file = new File(Environment.getExternalStorageDirectory(),
+                DOG_MULU);
+        deleteDir(file);
         main.saveDogId(0);
+    }
+
+    private static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            //递归删除目录中的子目录下
+            for (String aChildren : children) {
+                boolean success = deleteDir(new File(dir, aChildren));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // 目录此时为空，可以删除
+        return dir.delete();
     }
 
     public static void updateDogName(Long id, String name) {

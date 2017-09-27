@@ -235,7 +235,7 @@
                 app:lineType="segment"
                 app:maxOfVisible="12"
                 app:xyColor="@color/colorAccent"
-                app:xySize="10"
+                app:xySize="15"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp"
                 app:layout_constraintRight_toRightOf="parent"

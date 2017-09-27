@@ -37,5 +37,6 @@ dependencies {
     compile 'com.contrarywind:Android-PickerView:3.2.6'
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'org.greenrobot:greendao-generator:3.2.2'
+    compile 'com.lovedise:permissiongen:0.0.6'
     testCompile 'junit:junit:4.12'
 }
