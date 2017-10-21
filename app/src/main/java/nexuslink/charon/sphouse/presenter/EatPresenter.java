@@ -20,7 +20,7 @@ import nexuslink.charon.sphouse.view.IEatView;
 
 public class EatPresenter {
     private IEatView eatView;
-    private static List<EatBean> eatList;
+    private List<EatBean> eatList;
     private IEatEditView eatEditView;
 
     public EatPresenter(IEatView eatView) {
@@ -62,7 +62,9 @@ public class EatPresenter {
         long key;
         if (MainActivity.mDogSize - 1 == dogPosition) {
             key = main.getDogId();
-        } else key = main.getDogId()-1;
+        } else {
+            key = main.getDogId()-1;
+        }
 
 
         if (isEdit) {
@@ -80,8 +82,11 @@ public class EatPresenter {
     }
 
     public List<EatBean> getEatList() {
-        if (eatList != null)
+        if (eatList != null){
             return eatList;
-        else return null;
+        }
+        else {
+            return null;
+        }
     }
 }

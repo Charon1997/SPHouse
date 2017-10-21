@@ -46,4 +46,6 @@
         android:text="80g"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_15sp" />
+
+
 </LinearLayout>

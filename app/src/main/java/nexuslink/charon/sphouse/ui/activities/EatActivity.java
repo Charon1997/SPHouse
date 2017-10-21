@@ -59,7 +59,7 @@ public class EatActivity extends BaseActivity implements IEatView {
 
     private int dogPosition;
     private MainActivity main = new MainActivity();
-    private Long key = (long)0;
+    private Long key = (long) 0;
 
     //测试数据
     private List<EatBean> eatList;
@@ -110,26 +110,6 @@ public class EatActivity extends BaseActivity implements IEatView {
 
     }
 
-    private void initData() {
-        Date date = new Date(2010, 11, 20, 2, 23, 41);
-        //DataUtil.insertEatData(key,20, date);
-        //eatList = DataUtil.queryEatList(key);
-//        try {
-//            date = dateFormat.parse("2017-05-30 05:30:30");
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
 
     @Override
     protected void onResume() {
@@ -149,10 +129,10 @@ public class EatActivity extends BaseActivity implements IEatView {
         if (MainActivity.mDogSize - 1 == dogPosition) {
             Log.d(TAG, "onResume: keytrue");
             key = (long) main.getDogId();
+        } else {
+            key = (long) main.getDogId() - 1;
         }
-        else key = (long) main.getDogId() - 1;
-
-        Log.d(TAG, "onResume: key"+key);
+        Log.d(TAG, "onResume: key" + key);
         eatList = DataUtil.queryEatList(key);
 
         final LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -185,6 +165,8 @@ public class EatActivity extends BaseActivity implements IEatView {
             case R.id.menu_eat:
                 showToast("喂食");
                 break;
+            default:
+                break;
         }
         return true;
     }
@@ -201,6 +183,8 @@ public class EatActivity extends BaseActivity implements IEatView {
             case 1:
                 showToast("删除" + position);
                 presenter.deleteItem(key, position);
+                break;
+            default:
                 break;
         }
         return super.onContextItemSelected(item);
@@ -233,12 +217,12 @@ public class EatActivity extends BaseActivity implements IEatView {
         session.put(EAT_POSITION, position);
         //dog的页数
         session.put(MAIN_POSITION, dogPosition);
-
         startActivity(intent);
     }
 
     /**
      * addItem
+     *
      * @param isEdit
      */
     @Override

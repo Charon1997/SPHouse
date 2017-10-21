@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -53,7 +54,6 @@ import nexuslink.charon.sphouse.ui.popupwindow.MyPopupWindow;
 import nexuslink.charon.sphouse.utils.DataUtil;
 import nexuslink.charon.sphouse.view.IMainView;
 
-import static android.R.attr.path;
 import static nexuslink.charon.sphouse.config.Constant.*;
 
 import tech.linjiang.suitlines.SuitLines;
@@ -86,6 +86,7 @@ public class MainActivity extends BaseActivity
     private SuitLines mSlWeight, mSlTemperature;
     private ObservableScrollView scrollView;
     private MyPopupWindow mPopupWindow;
+    private RelativeLayout mNoDogLayout;
 
     private MainViewPagerAdapter mainViewPagerAdapter;
     private List<View> list;
@@ -117,9 +118,11 @@ public class MainActivity extends BaseActivity
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.main_fab:
-                if (dogList.size() != 0)
+                if (dogList.size() != 0) {
                     eat();
-                else showToast("请添加狗窝");
+                } else {
+                    showToast("请添加狗窝");
+                }
                 break;
             case R.id.nav_header_imageView:
                 showToast("image");
@@ -147,6 +150,8 @@ public class MainActivity extends BaseActivity
                     }
                 });
                 break;
+            default:
+                break;
         }
     }
 
@@ -172,6 +177,7 @@ public class MainActivity extends BaseActivity
         mFab = $(R.id.main_fab);
         mNavigationView = $(R.id.nav_view);
         mViewPager = $(R.id.viewpager_main);
+        mNoDogLayout = $(R.id.no_dog_layout_main);
     }
 
     @Override
@@ -255,6 +261,11 @@ public class MainActivity extends BaseActivity
         Log.d(TAG, "initDogList: " + dogList.size());
         presenter = new DogPresenter(dogList, this);
         mDogSize = dogList.size();
+        if (mDogSize == 0) {
+            mNoDogLayout.setVisibility(View.VISIBLE);
+        } else {
+            mNoDogLayout.setVisibility(View.GONE);
+        }
     }
 
 
@@ -324,13 +335,17 @@ public class MainActivity extends BaseActivity
         if (id == R.id.action_settings) {
             if (dogList.size() != 0) {
                 editDog();
-            } else showToast("请添加狗窝");
+            } else {
+                showToast("请添加狗窝");
+            }
 
             return true;
         } else if (id == R.id.action_scan) {
             if (dogList.size() == 2) {
                 showToast("您已添加最大狗窝数");
-            } else addDog();
+            } else {
+                addDog();
+            }
             return true;
         }
 
@@ -341,7 +356,9 @@ public class MainActivity extends BaseActivity
         int num = 0;
         if (dogList.size() == 0) {
             num = -1;
-        } else num = mViewPager.getCurrentItem();
+        } else {
+            num = mViewPager.getCurrentItem();
+        }
 
         Intent intent = new Intent(MainActivity.this, DogEditActivity.class);
         Session session = Session.getSession();
@@ -461,11 +478,14 @@ public class MainActivity extends BaseActivity
                     if (bitmap != null) {
                         Log.d("123", "bitmap" + bitmap.toString());
                         if (mCurrentPager == 0)
-                            //文件路径
+                        //文件路径
+                        {
                             file = new File(Environment.getExternalStorageDirectory(),
                                     DOG_IMAGE_0);
-                        else file = new File(Environment.getExternalStorageDirectory(),
-                                DOG_IMAGE_1);
+                        } else {
+                            file = new File(Environment.getExternalStorageDirectory(),
+                                    DOG_IMAGE_1);
+                        }
                         Log.d("123", "file" + file.getPath());
 
                         try {
@@ -482,7 +502,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @PermissionSuccess(requestCode = 100)
@@ -491,7 +511,7 @@ public class MainActivity extends BaseActivity
     }
 
     @PermissionFail(requestCode = 100)
-    public void doFailSomething(){
+    public void doFailSomething() {
         showToast("why???");
     }
 
@@ -525,14 +545,20 @@ public class MainActivity extends BaseActivity
         Bitmap bitmap = null;
         if (id == 0)
             //文件路径
+        {
             file = new File(Environment.getExternalStorageDirectory(),
                     DOG_IMAGE_0);
-        else file = new File(Environment.getExternalStorageDirectory(),
-                DOG_IMAGE_1);
+        }
+        else {
+            file = new File(Environment.getExternalStorageDirectory(),
+                    DOG_IMAGE_1);
+        }
         Log.d(TAG, "readImage: " + file);
 
         if (!file.exists())
+        {
             return null;
+        }
 
         try {
             FileInputStream stream = new FileInputStream(file);

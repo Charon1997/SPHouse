@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.design.widget.AppBarLayout
+            android:fitsSystemWindows="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:id="@+id/appBarLayout">
+            <android.support.v7.widget.Toolbar
+                android:fitsSystemWindows="true"
+                android:id="@+id/signin_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+        <LinearLayout
+            android:id="@+id/login_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:orientation="vertical"
+            android:layout_below="@+id/appBarLayout"
+            android:layout_alignParentStart="true">
+
+            <LinearLayout
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_marginEnd="16dp"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/doghouse_yellow_logo"
+                    android:layout_marginRight="16dp" />
+                <TextView
+                    android:textSize="28sp"
+                    android:layout_gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="28dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:id="@+id/signin_name"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:hint="请输入您的用户名"
+                    android:inputType="number"
+                    android:maxLength="11"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:id="@+id/signin_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="请输入您的密码"
+                    android:inputType="textPassword"
+                    android:maxLength="6"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="16sp"
+                android:backgroundTint="@color/colorPrimary"
+                android:id="@+id/signin_signin_button"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/sign_in"
+                tools:targetApi="lollipop" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_linear"
+            android:layout_marginRight="16dp">
+
+
+
+
+        </LinearLayout>
+
+        <Button
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="#00000000"
+            android:textColor="@color/black"
+            android:id="@+id/signin_forget_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:targetApi="lollipop"
+            android:text="忘记密码？"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp" />
+
+        <Button
+            android:layout_alignParentBottom="true"
+            android:background="#00000000"
+            android:textColor="@color/black"
+            android:layout_marginStart="16dp"
+            android:id="@+id/signin_register_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:targetApi="lollipop"
+            android:text="新用户注册"
+            android:layout_marginLeft="16dp" />
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

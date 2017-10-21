@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <nexuslink.charon.sphouse.config.ObservableScrollView
         android:id="@+id/scroll_view_viewpager_main"
         android:layout_width="0dp"
