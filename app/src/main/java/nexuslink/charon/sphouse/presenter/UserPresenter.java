@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import nexuslink.charon.sphouse.bean.UserBean;
 import nexuslink.charon.sphouse.biz.register.IUserBiz;
+import nexuslink.charon.sphouse.biz.register.OnClickableListener;
 import nexuslink.charon.sphouse.biz.register.OnLoginListener;
 import nexuslink.charon.sphouse.biz.register.UserBiz;
 import nexuslink.charon.sphouse.view.IForgetView;
@@ -57,7 +58,7 @@ public class UserPresenter {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        signInView.showFaileError();
+                        signInView.showFailError();
                         signInView.loading(false);
                     }
                 });
@@ -81,11 +82,31 @@ public class UserPresenter {
 
 
     public void getCode() {
-        forgetView.getCodeButton(forgetView.getUsername());
+        if (forgetView.getUsername().length() == 11) {
+            forgetView.buttonClickable(false);
+            userBiz.getMessageCode(forgetView.getUsername(), new OnClickableListener() {
+                @Override
+                public void canClick() {
+                    forgetView.buttonClickable(true);
+                    forgetView.setCodeButton("获取验证码");
+                }
+
+                @Override
+                public void cannotClick(String second) {
+                    forgetView.setCodeButton(second);
+                }
+            });
+        } else {
+            forgetView.toast("请输入正确的手机号");
+        }
+
+        //forgetView.getCodeButton(forgetView.getUsername());
     }
 
 
     public void forgetNext() {
         forgetView.next(forgetView.getUsername(),forgetView.getCode());
     }
+
+
 }

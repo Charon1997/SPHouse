@@ -14,8 +14,6 @@ import java.util.Date;
 
 public interface IDogEditView {
 
-    void loading(boolean loading);
-
     String getName();
 
     Date getBirthday();

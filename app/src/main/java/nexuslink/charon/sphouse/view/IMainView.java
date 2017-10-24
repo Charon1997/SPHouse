@@ -11,8 +11,6 @@ package nexuslink.charon.sphouse.view;
  */
 
 public interface IMainView {
-    void loading(boolean loading);
-
     void eat();
 
     void editDog();

@@ -407,12 +407,7 @@ public class MainActivity extends BaseActivity
             isFabOut = false;
         }
     }
-
-    @Override
-    public void loading(boolean loading) {
-
-    }
-
+    
     @Override
     public void eat() {
         int dogPosition = mViewPager.getCurrentItem();

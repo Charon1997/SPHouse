@@ -2,6 +2,8 @@ package nexuslink.charon.sphouse.ui.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +15,9 @@ import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.UserPresenter;
 import nexuslink.charon.sphouse.view.IForgetView;
+
+import static nexuslink.charon.sphouse.config.Constant.FORGET_USERNAME;
+import static nexuslink.charon.sphouse.config.Constant.REGISTER_FORGET;
 
 /**
  * 项目名称：SPHouse
@@ -28,8 +33,9 @@ public class ForgetActivity extends BaseActivity implements IForgetView{
     private EditText mEtUsername,mEtCode;
     private Button mBtCode;
     private Toolbar mToolbar;
-    private ProgressDialog mProgressDialog;
     private UserPresenter presenter = new UserPresenter(this);
+    private Session session = Session.getSession();
+    private String username;
 
     @Override
     public void widgetClick(View v) {
@@ -44,7 +50,7 @@ public class ForgetActivity extends BaseActivity implements IForgetView{
 
     @Override
     public void initSession(Session session) {
-
+        username = (String) session.get(REGISTER_FORGET);
     }
 
     @Override
@@ -67,7 +73,7 @@ public class ForgetActivity extends BaseActivity implements IForgetView{
 
     @Override
     public void setListener() {
-
+        mBtCode.setOnClickListener(this);
     }
 
     @Override
@@ -81,6 +87,9 @@ public class ForgetActivity extends BaseActivity implements IForgetView{
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("忘记密码");
+
+        mEtUsername.setText(username);
+        mEtUsername.setSelection(mEtUsername.length());
     }
 
     @Override
@@ -93,17 +102,10 @@ public class ForgetActivity extends BaseActivity implements IForgetView{
         return mEtCode.getText().toString();
     }
 
-    /**
-     * 获取验证码
-     * @param username
-     */
+
     @Override
-    public void getCodeButton(String username) {
-        if (username.length() == 11) {
-            //发送验证码
-        } else {
-            showToast("请输入正确的手机号");
-        }
+    public void setCodeButton(String second) {
+        mBtCode.setText(second);
     }
 
     /**
@@ -116,6 +118,9 @@ public class ForgetActivity extends BaseActivity implements IForgetView{
         loading(true);
         if (username.length() == 11 && code.length() == 6) {
             //检查验证码
+            Intent intent = new Intent(ForgetActivity.this, ReSetActivity.class);
+            session.put(FORGET_USERNAME, username);
+            startActivity(intent);
             loading(false);
         } else if (username.length() != 11 ){
             showToast("请输入正确的手机号");
@@ -128,16 +133,17 @@ public class ForgetActivity extends BaseActivity implements IForgetView{
 
     @Override
     public void loading(boolean loading) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("正在验证");
-            mProgressDialog.setTitle("忘记密码");
-        }
-        if (loading) {
-            mProgressDialog.show();
-        } else {
-            mProgressDialog.dismiss();
-        }
+        loading(loading,"忘记密码","正在验证");
+    }
+
+    @Override
+    public void buttonClickable(boolean clickable) {
+        mBtCode.setClickable(clickable);
+    }
+
+    @Override
+    public void toast(String msg) {
+        showToast(msg);
     }
 
     @Override

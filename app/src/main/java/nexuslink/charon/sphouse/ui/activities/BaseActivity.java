@@ -1,13 +1,11 @@
 package nexuslink.charon.sphouse.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +14,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
 
 
@@ -30,8 +27,9 @@ import nexuslink.charon.sphouse.config.Session;
  * 修改备注：
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private ProgressDialog mProgressDialog;
     /**
      * 是否沉浸状态栏
      **/
@@ -71,8 +69,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         if (null == mView) {
             mContextView = LayoutInflater.from(this)
                     .inflate(bindLayout(), null);
-        } else
+        } else{
             mContextView = mView;
+        }
         if (mAllowFullScreen) {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
@@ -281,5 +280,17 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         this.isAllowScreenRoate = isAllowScreenRoate;
     }
 
+    public void loading(boolean loading,String title,String message) {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+        }
+        if (loading) {
+            mProgressDialog.setMessage(message);
+            mProgressDialog.setTitle(title);
+            mProgressDialog.show();
+        } else {
+            mProgressDialog.dismiss();
+        }
+    }
 
 }

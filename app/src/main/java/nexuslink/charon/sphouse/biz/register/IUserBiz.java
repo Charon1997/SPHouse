@@ -18,4 +18,10 @@ public interface IUserBiz {
      * @param listener
      */
     public void signIn(String username,String password,OnLoginListener listener);
+
+    /**
+     * 获取手机验证码
+     * @param phoneNum
+     */
+    public void getMessageCode(String phoneNum ,OnClickableListener listener);
 }

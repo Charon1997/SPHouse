@@ -13,7 +13,6 @@ import java.util.Date;
  */
 
 public interface  IEatView {
-    void loading(boolean loading);
 
     void deleteItem(int position);
 

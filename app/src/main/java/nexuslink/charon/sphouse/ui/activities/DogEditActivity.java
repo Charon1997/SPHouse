@@ -262,12 +262,6 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         return true;
     }
 
-
-    @Override
-    public void loading(boolean loading) {
-
-    }
-
     @Override
     public String getName() {
         return mEtName.getText().toString();

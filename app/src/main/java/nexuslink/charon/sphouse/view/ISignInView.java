@@ -17,9 +17,7 @@ public interface ISignInView {
 
     public String getPassword();
 
-    public void loading(boolean loading);
-
-    public void showFaileError();
+    public void showFailError();
 
     /**
      * 登录
@@ -30,4 +28,6 @@ public interface ISignInView {
     public void forget(String username);
 
     public void register(String username);
+
+    public void loading(boolean loading);
 }

@@ -191,11 +191,6 @@ public class EatActivity extends BaseActivity implements IEatView {
     }
 
     @Override
-    public void loading(boolean loading) {
-
-    }
-
-    @Override
     public void deleteItem(int position) {
         adapter.notifyItemRemoved(position);
         adapter.notifyItemRangeChanged(position, presenter.getListSize() - position);

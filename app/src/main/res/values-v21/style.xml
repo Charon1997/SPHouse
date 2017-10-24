@@ -8,8 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowTranslucentStatus">true</item><!--状态栏为透明-->
+        <item name="android:windowTranslucentNavigation">false</item><!--导航栏为透明-->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

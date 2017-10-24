@@ -1,10 +1,12 @@
 package nexuslink.charon.sphouse.biz.register;
 
+import android.os.Handler;
+import android.os.Message;
+
 import nexuslink.charon.sphouse.bean.UserBean;
-import nexuslink.charon.sphouse.biz.register.IUserBiz;
-import nexuslink.charon.sphouse.biz.register.OnLoginListener;
 
 import static java.lang.Thread.sleep;
+import static nexuslink.charon.sphouse.config.Constant.FORGET_NUM;
 
 /**
  * 项目名称：SPHouse
@@ -17,6 +19,8 @@ import static java.lang.Thread.sleep;
  */
 
 public class UserBiz implements IUserBiz {
+    private int second = FORGET_NUM;
+
 
 
     @Override
@@ -40,7 +44,51 @@ public class UserBiz implements IUserBiz {
         }).start();
     }
 
+    @Override
+    public void getMessageCode(String phoneNum, final OnClickableListener listener) {
+        final Handler mHandler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 0:
+                        if (second > 0){
 
+                            try {
+                                sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            Message message = Message.obtain();
+                            message.what = 0;
+                            second --;
+                            listener.cannotClick(second+"秒");
+                            sendMessage(message);
+                        } else {
+                            Message message = Message.obtain();
+                            message.what = 1;
+                            sendMessage(message);
+                            second = FORGET_NUM;
+                        }
+                        break;
+                    case 1:
+                        try {
+                            sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        listener.canClick();
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        }; ;
+        //模拟发短信
+        Message message = Message.obtain();
+        message.what = 0;
+        mHandler.sendMessage(message);
+    }
 
 
 }

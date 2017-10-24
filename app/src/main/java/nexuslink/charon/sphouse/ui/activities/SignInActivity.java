@@ -32,7 +32,6 @@ public class SignInActivity extends BaseActivity implements ISignInView{
     private EditText mEtUsername,mEtPassword;
     private Button mBtSignIn,mBtForget,mBtRegister;
     private Toolbar mToolbar;
-    private ProgressDialog mProgressDialog;
 
     private UserPresenter presenter = new UserPresenter(this);
     @Override
@@ -102,20 +101,11 @@ public class SignInActivity extends BaseActivity implements ISignInView{
 
     @Override
     public void loading(boolean loading) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("加载中...");
-            mProgressDialog.setTitle("登录");
-        }
-        if (loading) {
-            mProgressDialog.show();
-        } else {
-            mProgressDialog.dismiss();
-        }
+        loading(loading,"登录","正在加载");
     }
 
     @Override
-    public void showFaileError() {
+    public void showFailError() {
         showToast("登录失败，请检查密码是否正确");
     }
 
