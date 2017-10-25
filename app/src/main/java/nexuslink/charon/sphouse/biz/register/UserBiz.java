@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import nexuslink.charon.sphouse.bean.UserBean;
+import nexuslink.charon.sphouse.utils.TimeUtil;
 
 import static java.lang.Thread.sleep;
 import static nexuslink.charon.sphouse.config.Constant.FORGET_NUM;
@@ -20,9 +21,6 @@ import static nexuslink.charon.sphouse.config.Constant.FORGET_NUM;
 
 public class UserBiz implements IUserBiz {
     private int second = FORGET_NUM;
-
-
-
     @Override
     public void signIn(final String username, final String password, final OnLoginListener listener) {
         new Thread(new Runnable() {
@@ -46,48 +44,47 @@ public class UserBiz implements IUserBiz {
 
     @Override
     public void getMessageCode(String phoneNum, final OnClickableListener listener) {
-        final Handler mHandler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 0:
-                        if (second > 0){
-
-                            try {
-                                sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            Message message = Message.obtain();
-                            message.what = 0;
-                            second --;
-                            listener.cannotClick(second+"秒");
-                            sendMessage(message);
-                        } else {
-                            Message message = Message.obtain();
-                            message.what = 1;
-                            sendMessage(message);
-                            second = FORGET_NUM;
-                        }
-                        break;
-                    case 1:
-                        try {
-                            sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        listener.canClick();
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-        }; ;
+        TimeUtil timeUtil = new TimeUtil();
+        timeUtil.countDown(listener);
         //模拟发短信
         Message message = Message.obtain();
         message.what = 0;
-        mHandler.sendMessage(message);
+        timeUtil.mHandler.sendMessage(message);
+    }
+
+    @Override
+    public void resetPassword(final String username, final String password, final OnResetListener listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //模拟联网
+                try {
+                    sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //if (result == 200){listener.onSuccess()}^^^
+                listener.onSuccess(new UserBean(username,password));
+            }
+        }).start();
+    }
+
+    @Override
+    public void registerSave(final String username, final String password ,String code, final OnResetListener listener) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //模拟联网操作
+                    sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //如果输入正确
+                listener.onSuccess(new UserBean(username,password));
+            }
+        }).start();
     }
 
 

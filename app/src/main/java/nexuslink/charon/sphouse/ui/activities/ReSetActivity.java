@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
+import nexuslink.charon.sphouse.presenter.UserPresenter;
 import nexuslink.charon.sphouse.view.IResetView;
 
 import static nexuslink.charon.sphouse.config.Constant.FORGET_USERNAME;
@@ -27,10 +28,11 @@ import static nexuslink.charon.sphouse.config.Constant.FORGET_USERNAME;
  */
 
 public class ReSetActivity extends BaseActivity implements IResetView {
-    private EditText mEtPassword1,mEtPassword2;
+    private EditText mEtPassword1, mEtPassword2;
     private Session session = Session.getSession();
     private String username;
     private Toolbar mToolbar;
+    private UserPresenter presenter = new UserPresenter(this);
 
     @Override
     public void widgetClick(View v) {
@@ -86,7 +88,7 @@ public class ReSetActivity extends BaseActivity implements IResetView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_reset_finish:
-                next();
+                presenter.resetFinish();
                 break;
             default:
                 break;
@@ -105,8 +107,23 @@ public class ReSetActivity extends BaseActivity implements IResetView {
     }
 
     @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
     public void next() {
         Intent intent = new Intent(ReSetActivity.this, SignInActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void loading(boolean loading) {
+        loading(loading, "重设密码", "正在重设...");
+    }
+
+    @Override
+    public void toast(String msg) {
+        showToast(msg);
     }
 }

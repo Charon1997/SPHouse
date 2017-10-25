@@ -41,7 +41,7 @@ public class ForgetActivity extends BaseActivity implements IForgetView{
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.forget_code_button:
-                presenter.getCode();
+                presenter.forgetGetCode();
                 break;
             default:
                 break;
@@ -102,10 +102,9 @@ public class ForgetActivity extends BaseActivity implements IForgetView{
         return mEtCode.getText().toString();
     }
 
-
     @Override
-    public void setCodeButton(String second) {
-        mBtCode.setText(second);
+    public void setCodeButton(String msg) {
+        mBtCode.setText(msg);
     }
 
     /**

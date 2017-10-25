@@ -6,8 +6,11 @@ import nexuslink.charon.sphouse.bean.UserBean;
 import nexuslink.charon.sphouse.biz.register.IUserBiz;
 import nexuslink.charon.sphouse.biz.register.OnClickableListener;
 import nexuslink.charon.sphouse.biz.register.OnLoginListener;
+import nexuslink.charon.sphouse.biz.register.OnResetListener;
 import nexuslink.charon.sphouse.biz.register.UserBiz;
 import nexuslink.charon.sphouse.view.IForgetView;
+import nexuslink.charon.sphouse.view.IRegisterView;
+import nexuslink.charon.sphouse.view.IResetView;
 import nexuslink.charon.sphouse.view.ISignInView;
 
 /**
@@ -24,6 +27,8 @@ public class UserPresenter {
     private IUserBiz userBiz;
     private ISignInView signInView;
     private IForgetView forgetView;
+    private IResetView resetView;
+    private IRegisterView registerView;
     private Handler mHandler = new Handler();
 
     public UserPresenter(ISignInView signUpView) {
@@ -34,6 +39,16 @@ public class UserPresenter {
     public UserPresenter(IForgetView forgetView) {
         userBiz = new UserBiz();
         this.forgetView = forgetView;
+    }
+
+    public UserPresenter(IResetView resetView) {
+        userBiz = new UserBiz();
+        this.resetView = resetView;
+    }
+
+    public UserPresenter(IRegisterView registerView) {
+        userBiz = new UserBiz();
+        this.registerView = registerView;
     }
 
     /**
@@ -81,7 +96,7 @@ public class UserPresenter {
     }
 
 
-    public void getCode() {
+    public void forgetGetCode() {
         if (forgetView.getUsername().length() == 11) {
             forgetView.buttonClickable(false);
             userBiz.getMessageCode(forgetView.getUsername(), new OnClickableListener() {
@@ -105,7 +120,96 @@ public class UserPresenter {
 
 
     public void forgetNext() {
-        forgetView.next(forgetView.getUsername(),forgetView.getCode());
+        forgetView.next(forgetView.getUsername(), forgetView.getCode());
+    }
+
+    public void resetFinish() {
+        resetView.loading(true);
+        if (resetView.getPassword1().equals(resetView.getPassword2())) {
+            userBiz.resetPassword(resetView.getUsername(), resetView.getPassword1(), new OnResetListener() {
+                @Override
+                public void onSuccess(UserBean userBean) {
+
+                    resetView.loading(false);
+                    resetView.toast("重设密码成功");
+                    resetView.next();
+                }
+
+                @Override
+                public void onFailed() {
+                    resetView.loading(false);
+                    resetView.toast("重设密码失败");
+                }
+            });
+        } else {
+            resetView.toast("输入密码不一致");
+        }
+    }
+
+
+    public void registerGetCode() {
+        if (registerView.getUsername().length() == 11) {
+            registerView.buttonClickable(false);
+            userBiz.getMessageCode(registerView.getUsername(), new OnClickableListener() {
+                @Override
+                public void canClick() {
+                    registerView.buttonClickable(true);
+                    registerView.setCodeButton("获取验证码");
+                }
+
+                @Override
+                public void cannotClick(String second) {
+                    registerView.setCodeButton(second);
+                }
+            });
+        } else {
+            registerView.toast("请输入正确的手机号");
+        }
+    }
+
+    public void registerSave() {
+        if (registerView.getUsername().length() != 11) {
+            registerView.toast("电话号码不正确");
+            return;
+        }
+        if (registerView.getCode().length() != 6) {
+            registerView.toast("验证码不正确");
+            return;
+        }
+        if (registerView.getPassword1().length() < 6 || registerView.getPassword2().length() < 6) {
+            registerView.toast("密码不能低于6位");
+            return;
+        }
+
+        if (!registerView.getPassword1().equals(registerView.getPassword2())) {
+            registerView.toast("输入密码不一致");
+            return;
+        }
+        registerView.loading(true);
+        userBiz.registerSave(registerView.getUsername(), registerView.getPassword1(), registerView.getCode(), new OnResetListener() {
+            @Override
+            public void onSuccess(UserBean userBean) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        registerView.loading(false);
+                        registerView.save();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed() {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        registerView.loading(false);
+                        registerView.toast("注册失败");
+                    }
+                });
+
+            }
+        });
     }
 
 

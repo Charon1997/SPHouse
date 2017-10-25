@@ -15,7 +15,7 @@ public interface IForgetView {
 
     public String getCode();
 
-    public void setCodeButton(String second);
+    public void setCodeButton(String msg);
 
     public void next(String username,String code);
 

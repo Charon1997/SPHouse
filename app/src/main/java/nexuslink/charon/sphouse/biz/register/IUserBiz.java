@@ -24,4 +24,8 @@ public interface IUserBiz {
      * @param phoneNum
      */
     public void getMessageCode(String phoneNum ,OnClickableListener listener);
+
+    public void resetPassword(String username,String password,OnResetListener listener);
+
+    public void registerSave(String username,String password,String code,OnResetListener listener);
 }

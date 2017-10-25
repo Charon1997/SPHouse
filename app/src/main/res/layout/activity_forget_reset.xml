@@ -1,74 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fitsSystemWindows="true"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
     <RelativeLayout
-        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
         <android.support.design.widget.AppBarLayout
-            android:fitsSystemWindows="true"
+            android:id="@+id/appbar_forget_reset"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            android:id="@+id/appbar_forget_reset">
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
             <android.support.v7.widget.Toolbar
-                android:fitsSystemWindows="true"
                 android:id="@+id/forget_reset_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </android.support.v7.widget.Toolbar>
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"></android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
+
         <LinearLayout
-            android:layout_below="@id/appbar_forget_reset"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appbar_forget_reset"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <android.support.design.widget.TextInputLayout
-                    android:layout_marginTop="16dp"
-                    android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <EditText
+                    android:id="@+id/forget_reset_password_edit"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5">
-                    <EditText
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:id="@+id/forget_reset_password_edit"
-                        android:layout_width="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_height="wrap_content"
-                        android:hint="请输入您的新密码"
-                        android:inputType="number"
-                        android:maxLength="11"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        />
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:hint="请输入您的新密码"
+                    android:inputType="textPassword"
+                    android:maxLength="20"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </android.support.design.widget.TextInputLayout>
 
 
             <android.support.design.widget.TextInputLayout
-                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
+
                 <EditText
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
                     android:id="@+id/forget_reset_password2_edit"
                     android:layout_width="match_parent"
-                    android:layout_weight="3"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="3"
                     android:hint="请再次输入您的新密码"
-                    android:inputType="number"
-                    android:maxLength="6"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    />
+                    android:inputType="textPassword"
+                    android:maxLength="20"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
     </RelativeLayout>

@@ -15,6 +15,7 @@ import nexuslink.charon.sphouse.presenter.UserPresenter;
 import nexuslink.charon.sphouse.view.ISignInView;
 
 import static nexuslink.charon.sphouse.config.Constant.REGISTER_FORGET;
+import static nexuslink.charon.sphouse.config.Constant.REGISTER_REGISTER;
 import static nexuslink.charon.sphouse.config.Constant.REGISTER_SIGN_IN;
 
 /**
@@ -126,6 +127,8 @@ public class SignInActivity extends BaseActivity implements ISignInView{
 
     @Override
     public void register(String username) {
-
+        Intent intent = new Intent(SignInActivity.this, RegisterActivity.class);
+        session.put(REGISTER_REGISTER, username);
+        startActivity(intent);
     }
 }

@@ -30,6 +30,8 @@
             android:launchMode="singleTask"/>
         <activity android:name=".ui.activities.ReSetActivity"
             android:launchMode="singleTask"/>
+        <activity android:name=".ui.activities.RegisterActivity"
+            android:launchMode="singleTask"/>
     </application>
 
 </manifest>

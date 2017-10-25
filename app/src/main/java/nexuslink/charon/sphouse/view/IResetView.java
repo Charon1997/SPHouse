@@ -15,5 +15,12 @@ public interface IResetView {
 
     public String getPassword2();
 
+    public String getUsername();
+
     public void next();
+
+    public void loading(boolean loading);
+
+    public void toast(String msg);
+
 }

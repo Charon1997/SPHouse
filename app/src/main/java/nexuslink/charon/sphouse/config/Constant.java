@@ -52,6 +52,7 @@ public class Constant {
 
     public static final String REGISTER_SIGN_IN = "REGISTER_SIGN_IN";
     public static final String REGISTER_FORGET = "REGISTER_FORGET";
+    public static final String REGISTER_REGISTER = "REGISTER_REGISTER";
 
     public static final String FORGET_USERNAME = "FORGET_USERNAME";
 
