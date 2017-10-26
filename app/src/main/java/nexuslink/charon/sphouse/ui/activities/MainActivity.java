@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -45,6 +44,7 @@ import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.bean.DogBean;
+import nexuslink.charon.sphouse.bean.UserBean;
 import nexuslink.charon.sphouse.config.ObservableScrollView;
 import nexuslink.charon.sphouse.config.ScrollViewListener;
 import nexuslink.charon.sphouse.config.Session;
@@ -65,6 +65,8 @@ import tech.linjiang.suitlines.Unit;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, ScrollViewListener, IMainView {
+    public static UserBean loginUser;
+
     public static int mCurrentPager = 0;
     public static int mDogId = 0;
     public static int mDogSize = 0;
@@ -157,7 +159,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void initSession(Session session) {
-
+        loginUser = (UserBean) session.get(REGISTER_SIGN_IN);
     }
 
     @Override
@@ -348,23 +350,7 @@ public class MainActivity extends BaseActivity
             }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    private void addDog() {
-        int num = 0;
-        if (dogList.size() == 0) {
-            num = -1;
-        } else {
-            num = mViewPager.getCurrentItem();
-        }
-
-        Intent intent = new Intent(MainActivity.this, DogEditActivity.class);
-        Session session = Session.getSession();
-        session.put(MAIN_EDIT, false);
-        session.put(MAIN_POSITION, num);
-        startActivity(intent);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -407,7 +393,23 @@ public class MainActivity extends BaseActivity
             isFabOut = false;
         }
     }
-    
+
+    @Override
+    public void addDog() {
+        int num = 0;
+        if (dogList.size() == 0) {
+            num = -1;
+        } else {
+            num = mViewPager.getCurrentItem();
+        }
+
+        Intent intent = new Intent(MainActivity.this, DogEditActivity.class);
+        Session session = Session.getSession();
+        session.put(MAIN_EDIT, false);
+        session.put(MAIN_POSITION, num);
+        startActivity(intent);
+    }
+
     @Override
     public void eat() {
         int dogPosition = mViewPager.getCurrentItem();

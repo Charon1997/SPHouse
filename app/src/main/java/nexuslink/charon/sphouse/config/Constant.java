@@ -56,7 +56,15 @@ public class Constant {
 
     public static final String FORGET_USERNAME = "FORGET_USERNAME";
 
-    public static final int FORGET_NUM = 10;
+    public static final int FORGET_NUM = 60;
+
+    public static final String COUNT_DOWN_TIME = "COUNT_DOWN_TIME";
+    public static final String CURRENT_TIME = "CURRENT_TIME";
 
 
+    /**
+     * 位数限制
+     */
+    public static final int PHONE_LENGTH = 11;
+    public static final int PASSWORD_MIX = 6;
 }

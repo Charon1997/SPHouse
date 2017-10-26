@@ -19,18 +19,18 @@
         <activity android:name=".ui.activities.EatActivity" />
         <activity android:name=".ui.activities.EatEditActivity" />
         <activity android:name=".ui.activities.DogEditActivity" />
-        <activity android:name=".ui.activities.SignInActivity"
+        <activity android:name=".ui.activities.register.SignInActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.ForgetActivity"
+        <activity android:name=".ui.activities.register.ForgetActivity"
             android:launchMode="singleTask"/>
-        <activity android:name=".ui.activities.ReSetActivity"
+        <activity android:name=".ui.activities.register.ReSetActivity"
             android:launchMode="singleTask"/>
-        <activity android:name=".ui.activities.RegisterActivity"
+        <activity android:name=".ui.activities.register.RegisterActivity"
             android:launchMode="singleTask"/>
     </application>
 

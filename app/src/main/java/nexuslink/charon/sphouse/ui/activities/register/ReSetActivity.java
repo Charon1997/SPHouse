@@ -1,9 +1,7 @@
-package nexuslink.charon.sphouse.ui.activities;
+package nexuslink.charon.sphouse.ui.activities.register;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +11,7 @@ import android.widget.EditText;
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.UserPresenter;
+import nexuslink.charon.sphouse.ui.activities.BaseActivity;
 import nexuslink.charon.sphouse.view.IResetView;
 
 import static nexuslink.charon.sphouse.config.Constant.FORGET_USERNAME;

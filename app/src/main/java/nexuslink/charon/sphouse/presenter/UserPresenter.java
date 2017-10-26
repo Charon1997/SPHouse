@@ -13,6 +13,10 @@ import nexuslink.charon.sphouse.view.IRegisterView;
 import nexuslink.charon.sphouse.view.IResetView;
 import nexuslink.charon.sphouse.view.ISignInView;
 
+import static nexuslink.charon.sphouse.config.Constant.FORGET_NUM;
+import static nexuslink.charon.sphouse.config.Constant.PASSWORD_MIX;
+import static nexuslink.charon.sphouse.config.Constant.PHONE_LENGTH;
+
 /**
  * 项目名称：SPHouse
  * 类描述：
@@ -96,10 +100,10 @@ public class UserPresenter {
     }
 
 
-    public void forgetGetCode() {
-        if (forgetView.getUsername().length() == 11) {
+    public void forgetGetCode(long time) {
+        if (forgetView.getUsername().length() == PHONE_LENGTH) {
             forgetView.buttonClickable(false);
-            userBiz.getMessageCode(forgetView.getUsername(), new OnClickableListener() {
+            userBiz.getMessageCode(forgetView.getUsername(),time, new OnClickableListener() {
                 @Override
                 public void canClick() {
                     forgetView.buttonClickable(true);
@@ -124,21 +128,30 @@ public class UserPresenter {
     }
 
     public void resetFinish() {
-        resetView.loading(true);
         if (resetView.getPassword1().equals(resetView.getPassword2())) {
+            resetView.loading(true);
             userBiz.resetPassword(resetView.getUsername(), resetView.getPassword1(), new OnResetListener() {
                 @Override
                 public void onSuccess(UserBean userBean) {
-
-                    resetView.loading(false);
-                    resetView.toast("重设密码成功");
-                    resetView.next();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            resetView.loading(false);
+                            resetView.toast("重设密码成功");
+                            resetView.next();
+                        }
+                    });
                 }
 
                 @Override
                 public void onFailed() {
-                    resetView.loading(false);
-                    resetView.toast("重设密码失败");
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            resetView.loading(false);
+                            resetView.toast("重设密码失败");
+                        }
+                    });
                 }
             });
         } else {
@@ -147,10 +160,10 @@ public class UserPresenter {
     }
 
 
-    public void registerGetCode() {
-        if (registerView.getUsername().length() == 11) {
+    public void registerGetCode(long time) {
+        if (registerView.getUsername().length() == PHONE_LENGTH) {
             registerView.buttonClickable(false);
-            userBiz.getMessageCode(registerView.getUsername(), new OnClickableListener() {
+            userBiz.getMessageCode(registerView.getUsername(),time, new OnClickableListener() {
                 @Override
                 public void canClick() {
                     registerView.buttonClickable(true);
@@ -168,15 +181,15 @@ public class UserPresenter {
     }
 
     public void registerSave() {
-        if (registerView.getUsername().length() != 11) {
+        if (registerView.getUsername().length() != PHONE_LENGTH) {
             registerView.toast("电话号码不正确");
             return;
         }
-        if (registerView.getCode().length() != 6) {
+        if (registerView.getCode().length() != PASSWORD_MIX) {
             registerView.toast("验证码不正确");
             return;
         }
-        if (registerView.getPassword1().length() < 6 || registerView.getPassword2().length() < 6) {
+        if (registerView.getPassword1().length() < PASSWORD_MIX || registerView.getPassword2().length() < PASSWORD_MIX) {
             registerView.toast("密码不能低于6位");
             return;
         }

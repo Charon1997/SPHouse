@@ -20,12 +20,27 @@ public interface IUserBiz {
     public void signIn(String username,String password,OnLoginListener listener);
 
     /**
-     * 获取手机验证码
+     * 获取验证码
      * @param phoneNum
+     * @param second
+     * @param listener
      */
-    public void getMessageCode(String phoneNum ,OnClickableListener listener);
+    public void getMessageCode(String phoneNum ,long second,OnClickableListener listener);
 
+    /**
+     * 重设密码
+     * @param username
+     * @param password
+     * @param listener
+     */
     public void resetPassword(String username,String password,OnResetListener listener);
 
+    /**
+     * 注册账号
+     * @param username
+     * @param password
+     * @param code
+     * @param listener
+     */
     public void registerSave(String username,String password,String code,OnResetListener listener);
 }

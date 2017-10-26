@@ -24,4 +24,5 @@ public interface IForgetView {
     public void buttonClickable(boolean clickable);
 
     public void toast(String msg);
+
 }

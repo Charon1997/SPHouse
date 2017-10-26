@@ -11,7 +11,7 @@ package nexuslink.charon.sphouse.view;
  */
 
 public interface IMainView {
+    void addDog();
     void eat();
-
     void editDog();
 }

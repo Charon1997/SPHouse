@@ -1,8 +1,11 @@
-package nexuslink.charon.sphouse.ui.activities;
+package nexuslink.charon.sphouse.ui.activities.register;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.CountDownTimer;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +15,12 @@ import android.widget.EditText;
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.UserPresenter;
+import nexuslink.charon.sphouse.ui.activities.BaseActivity;
 import nexuslink.charon.sphouse.view.IRegisterView;
 
+import static nexuslink.charon.sphouse.config.Constant.COUNT_DOWN_TIME;
+import static nexuslink.charon.sphouse.config.Constant.CURRENT_TIME;
+import static nexuslink.charon.sphouse.config.Constant.FORGET_NUM;
 import static nexuslink.charon.sphouse.config.Constant.REGISTER_REGISTER;
 
 /**
@@ -32,14 +39,14 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
     private Toolbar mToolbar;
     private String username;
     private UserPresenter presenter = new UserPresenter(this);
-
+    private SharedPreferences preferences;
 
     @Override
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.register_code_button:
                 //获取验证码
-                presenter.registerGetCode();
+                presenter.registerGetCode(FORGET_NUM);
                 break;
             default:
                 break;
@@ -87,6 +94,12 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("注册");
+
+        mEtUsername.setText(username);
+        mEtUsername.setSelection(mEtUsername.length());
+
+        preferences = getSharedPreferences("register", MODE_PRIVATE);
+        isCountDown();
     }
 
     @Override
@@ -156,5 +169,47 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         return true;
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(COUNT_DOWN_TIME, readTime());
+        editor.putLong(CURRENT_TIME, System.currentTimeMillis());
+        Log.d(TAG, "onStop: " + readTime());
+        editor.apply();
+    }
 
+    private long readTime() {
+        long time = 0;
+        try {
+            time = Long.parseLong(mBtCode.getText().toString().substring(0, mBtCode.getText().length() - 5));
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "readTime: "+e);
+        }
+
+        return time;
+    }
+
+    public void isCountDown() {
+        long remainingTime = preferences.getLong(COUNT_DOWN_TIME, 0);
+        long restTime = (remainingTime - ((System.currentTimeMillis() - preferences.getLong(CURRENT_TIME, 0)) / 1000));
+        Log.d(TAG, "isCountDown: " + restTime);
+        if (restTime > 0) {
+            CountDownTimer timer = new CountDownTimer(restTime * 1000, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    buttonClickable(false);
+                    mBtCode.setText(millisUntilFinished / 1000 + "秒后可重发");
+                }
+
+                @Override
+                public void onFinish() {
+                    buttonClickable(true);
+                    mBtCode.setText("获取验证码");
+                }
+            };
+            timer.start();
+        }
+
+    }
 }

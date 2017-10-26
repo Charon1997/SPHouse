@@ -66,7 +66,6 @@ public class EatPresenter {
             key = main.getDogId()-1;
         }
 
-
         if (isEdit) {
             //编辑
             DataUtil.updateEatIntake(key,position, eatEditView.getIntake());

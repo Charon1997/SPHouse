@@ -1,10 +1,8 @@
 package nexuslink.charon.sphouse.biz.register;
 
-import android.os.Handler;
-import android.os.Message;
+import android.os.CountDownTimer;
 
 import nexuslink.charon.sphouse.bean.UserBean;
-import nexuslink.charon.sphouse.utils.TimeUtil;
 
 import static java.lang.Thread.sleep;
 import static nexuslink.charon.sphouse.config.Constant.FORGET_NUM;
@@ -20,7 +18,7 @@ import static nexuslink.charon.sphouse.config.Constant.FORGET_NUM;
  */
 
 public class UserBiz implements IUserBiz {
-    private int second = FORGET_NUM;
+
     @Override
     public void signIn(final String username, final String password, final OnLoginListener listener) {
         new Thread(new Runnable() {
@@ -33,8 +31,8 @@ public class UserBiz implements IUserBiz {
                     e.printStackTrace();
                 }
                 //如果输入正确
-                if (username.equals("123") && password.equals("123")){
-                    listener.loginSuccess(new UserBean(username,password));
+                if ("111".equals(username) && "111".equals(password)) {
+                    listener.loginSuccess(new UserBean(username, password));
                 } else {
                     listener.loginFailed();
                 }
@@ -42,14 +40,23 @@ public class UserBiz implements IUserBiz {
         }).start();
     }
 
+
     @Override
-    public void getMessageCode(String phoneNum, final OnClickableListener listener) {
-        TimeUtil timeUtil = new TimeUtil();
-        timeUtil.countDown(listener);
-        //模拟发短信
-        Message message = Message.obtain();
-        message.what = 0;
-        timeUtil.mHandler.sendMessage(message);
+    public void getMessageCode(String phoneNum, long second, final OnClickableListener listener) {
+
+        CountDownTimer timer = new CountDownTimer(second * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                listener.cannotClick(millisUntilFinished / 1000 + "秒后可重发");
+            }
+
+            @Override
+            public void onFinish() {
+                listener.canClick();
+            }
+        };
+
+        timer.start();
     }
 
     @Override
@@ -64,13 +71,13 @@ public class UserBiz implements IUserBiz {
                     e.printStackTrace();
                 }
                 //if (result == 200){listener.onSuccess()}^^^
-                listener.onSuccess(new UserBean(username,password));
+                listener.onSuccess(new UserBean(username, password));
             }
         }).start();
     }
 
     @Override
-    public void registerSave(final String username, final String password ,String code, final OnResetListener listener) {
+    public void registerSave(final String username, final String password, String code, final OnResetListener listener) {
 
         new Thread(new Runnable() {
             @Override
@@ -82,7 +89,7 @@ public class UserBiz implements IUserBiz {
                     e.printStackTrace();
                 }
                 //如果输入正确
-                listener.onSuccess(new UserBean(username,password));
+                listener.onSuccess(new UserBean(username, password));
             }
         }).start();
     }

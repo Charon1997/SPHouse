@@ -151,7 +151,9 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         int option = 0;
         if (sex.equals("男")) {
             option = 0;
-        } else option = 1;
+        } else {
+            option = 1;
+        }
 
         mOpvSex = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
@@ -234,8 +236,9 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (position == -1)
+                if (position == -1){
                     position = 0;
+                }
                 MainActivity.mCurrentPager = position;
                 finish();
             }

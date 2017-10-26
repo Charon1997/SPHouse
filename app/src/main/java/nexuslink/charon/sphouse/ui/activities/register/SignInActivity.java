@@ -1,6 +1,5 @@
-package nexuslink.charon.sphouse.ui.activities;
+package nexuslink.charon.sphouse.ui.activities.register;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +11,8 @@ import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.bean.UserBean;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.UserPresenter;
+import nexuslink.charon.sphouse.ui.activities.BaseActivity;
+import nexuslink.charon.sphouse.ui.activities.MainActivity;
 import nexuslink.charon.sphouse.view.ISignInView;
 
 import static nexuslink.charon.sphouse.config.Constant.REGISTER_FORGET;

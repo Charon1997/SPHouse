@@ -2,7 +2,6 @@ package nexuslink.charon.sphouse.ui.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -65,6 +64,8 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
                 break;
             case R.id.edit_intake_eat_edit:
                 mOPVPick.show(v);
+                break;
+            default:
                 break;
         }
     }
@@ -178,15 +179,19 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isChanged)
+                if (isChanged) {
                     showDialog();
-                else finish();
+                } else {
+                    finish();
+                }
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (isEdit)
+        if (isEdit) {
             getSupportActionBar().setTitle("编辑");
-        else getSupportActionBar().setTitle("添加");
+        } else {
+            getSupportActionBar().setTitle("添加");
+        }
     }
 
     @Override
@@ -199,9 +204,11 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_edit:
-                presenter.save(isEdit,dogPosition,position);
+                presenter.save(isEdit, dogPosition, position);
                 showToast("信息已保存");
                 finish();
+                break;
+            default:
                 break;
         }
         return true;
