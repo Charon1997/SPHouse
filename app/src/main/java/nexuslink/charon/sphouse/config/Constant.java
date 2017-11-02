@@ -67,4 +67,5 @@ public class Constant {
      */
     public static final int PHONE_LENGTH = 11;
     public static final int PASSWORD_MIX = 6;
+    public static final int CODE_LENGTH = 4;
 }

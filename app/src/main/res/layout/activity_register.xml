@@ -26,6 +26,28 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:id="@+id/register_username_edit"
+                    android:layout_width="match_parent"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="@string/please_input_phone"
+                    android:inputType="number"
+                    android:maxLength="11"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+            </android.support.design.widget.TextInputLayout>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -37,48 +59,27 @@
                     android:layout_weight="5">
                     <EditText
                         android:layout_marginLeft="16dp"
-                        android:layout_marginRight="8dp"
-                        android:id="@+id/register_username_edit"
+                        android:layout_marginRight="16dp"
+                        android:id="@+id/register_code_edit"
                         android:layout_width="match_parent"
                         android:layout_gravity="center"
                         android:layout_height="wrap_content"
-                        android:hint="请输入手机号"
+                        android:hint="@string/please_input_code"
                         android:inputType="number"
-                        android:maxLength="11"
+                        android:maxLength="4"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         />
                 </android.support.design.widget.TextInputLayout>
                 <Button
                     android:id="@+id/register_code_button"
-                    android:layout_marginTop="16dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="3"
                     android:layout_gravity="center"
-                    android:text="获取验证码"
+                    android:background="@drawable/btn_dwon"
+                    android:text="@string/get_code"
                     android:layout_marginRight="16dp"/>
             </LinearLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_marginTop="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <EditText
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:id="@+id/register_code_edit"
-                    android:layout_width="match_parent"
-                    android:layout_weight="3"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:hint="请输入验证码"
-                    android:inputType="number"
-                    android:maxLength="6"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    />
-            </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,7 +92,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:hint="请输入密码"
+                    android:hint="@string/please_input_password"
                     android:inputType="textPassword"
                     android:maxLength="20"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -112,7 +113,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_weight="3"
-                    android:hint="请再次输入密码"
+                    android:hint="@string/please_input_password_again"
                     android:inputType="textPassword"
                     android:maxLength="20"
                     android:textAppearance="?android:attr/textAppearanceMedium" />

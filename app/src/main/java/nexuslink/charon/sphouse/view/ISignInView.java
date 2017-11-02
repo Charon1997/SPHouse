@@ -12,22 +12,44 @@ import nexuslink.charon.sphouse.bean.UserBean;
  * 修改备注：
  */
 
-public interface ISignInView {
-    public String getUserName();
+public interface ISignInView extends BaseView{
+    /**
+     * 得到用户名
+     *
+     * @return 用户名
+     */
+    String getUserName();
 
-    public String getPassword();
+    /**
+     * 得到密码
+     *
+     * @return 密码
+     */
+    String getPassword();
 
-    public void showFailError();
+    /**
+     * 登录出错时调用
+     */
+    void showFailError();
 
     /**
      * 登录
-     * @param userBean
+     *
+     * @param userBean 用户
      */
-    public void signIn(UserBean userBean);
+    void signIn(UserBean userBean);
 
-    public void forget(String username);
+    /**
+     * 点击忘记密码时调用
+     *
+     * @param username 用户名
+     */
+    void forget(String username);
 
-    public void register(String username);
+    /**
+     * 点击注册时调用
+     * @param username 用户名
+     */
+    void register(String username);
 
-    public void loading(boolean loading);
 }

@@ -13,6 +13,7 @@ import nexuslink.charon.sphouse.view.IRegisterView;
 import nexuslink.charon.sphouse.view.IResetView;
 import nexuslink.charon.sphouse.view.ISignInView;
 
+import static nexuslink.charon.sphouse.config.Constant.CODE_LENGTH;
 import static nexuslink.charon.sphouse.config.Constant.FORGET_NUM;
 import static nexuslink.charon.sphouse.config.Constant.PASSWORD_MIX;
 import static nexuslink.charon.sphouse.config.Constant.PHONE_LENGTH;
@@ -123,8 +124,8 @@ public class UserPresenter {
     }
 
 
-    public void forgetNext() {
-        forgetView.next(forgetView.getUsername(), forgetView.getCode());
+    public void forgetNext(boolean smart) {
+        forgetView.next(forgetView.getUsername(), forgetView.getCode(),smart);
     }
 
     public void resetFinish() {
@@ -185,7 +186,7 @@ public class UserPresenter {
             registerView.toast("电话号码不正确");
             return;
         }
-        if (registerView.getCode().length() != PASSWORD_MIX) {
+        if (registerView.getCode().length() != CODE_LENGTH) {
             registerView.toast("验证码不正确");
             return;
         }

@@ -1,6 +1,7 @@
 package nexuslink.charon.sphouse.utils;
 
-import android.app.Application;
+
+import com.mob.MobApplication;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -17,7 +18,7 @@ import nexuslink.charon.accountbook.greendao.gen.DaoSession;
  * 修改备注：
  */
 
-public class APP extends Application {
+public class APP extends MobApplication {
     public static final boolean ENCRYPTED = true;
 
     private static DaoSession daoSession;
@@ -26,7 +27,7 @@ public class APP extends Application {
     public void onCreate() {
         super.onCreate();
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,ENCRYPTED?"users-db-encrypted":"users-db");
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "users-db-encrypted" : "users-db");
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
     }

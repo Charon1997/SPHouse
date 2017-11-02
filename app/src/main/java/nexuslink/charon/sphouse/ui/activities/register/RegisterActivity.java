@@ -142,6 +142,11 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
     @Override
     public void buttonClickable(boolean clickable) {
         mBtCode.setClickable(clickable);
+        if (clickable) {
+            mBtCode.setBackgroundResource(R.drawable.btn_dwon);
+        } else {
+            mBtCode.setBackgroundResource(R.drawable.btn_unclick);
+        }
     }
 
     @Override

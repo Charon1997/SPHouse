@@ -84,7 +84,6 @@ public class MyPopupWindow extends PopupWindow implements View.OnClickListener {
     }
 
     public void showPopupWindow(View parent) {
-
         if (!this.isShowing()) {
             this.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
         } else {
@@ -96,21 +95,20 @@ public class MyPopupWindow extends PopupWindow implements View.OnClickListener {
     public void onClick(View arg0) {
         switch (arg0.getId()) {
             case R.id.photo_take:
+                //拍照
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (MainActivity.mCurrentPager == 0)
+                if (MainActivity.mCurrentPager == 0) {
                     //文件路径
-                    file = new File(Environment.getExternalStorageDirectory(),
-                            DOG_IMAGE_0);
-                else file = new File(Environment.getExternalStorageDirectory(),
-                        DOG_IMAGE_1);
+                    file = new File(Environment.getExternalStorageDirectory(), DOG_IMAGE_0);
+                } else {
+                    file = new File(Environment.getExternalStorageDirectory(), DOG_IMAGE_1);
+                }
 
                 Log.d("123", "file" + file.getPath());
                 ImgUri = Uri.fromFile(file);
                 intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, ImgUri);
-                Log.d("123", "take photo");
                 activity.startActivityForResult(intent, 1);
-                Log.d("123", "take photo");
                 type = CAMERA;
                 if (listener != null) {
                     listener.getType(type);
@@ -120,9 +118,9 @@ public class MyPopupWindow extends PopupWindow implements View.OnClickListener {
                 this.dismiss();
                 break;
             case R.id.photo_album:
+                //相册
                 Intent intent2 = new Intent("android.intent.action.PICK");
                 intent2.setType("image/*");
-                Log.d("123", "album");
                 activity.startActivityForResult(intent2, 2);
                 Log.d("123", "album");
                 type = PHONE;
@@ -139,6 +137,12 @@ public class MyPopupWindow extends PopupWindow implements View.OnClickListener {
         }
     }
 
+    /**
+     * 图片
+     * @param uri uri地址
+     * @param outputX 输出X
+     * @param outputY 输出Y
+     */
     public void onPhoto(Uri uri, int outputX, int outputY) {
         Intent intent = null;
 
@@ -158,15 +162,24 @@ public class MyPopupWindow extends PopupWindow implements View.OnClickListener {
         activity.startActivityForResult(intent, 3);
     }
 
-    public interface onGetTypeClickListener {
+    public interface OnGetTypeClickListener {
+        /**
+         * 获取类型
+         * @param type 类型
+         */
         void getType(int type);
 
+        /**
+         * 获取图片uri
+         * @param imgUri 图片uri
+         * @param file 文件路径
+         */
         void getImgUri(Uri imgUri, File file);
     }
 
-    private onGetTypeClickListener listener;
+    private OnGetTypeClickListener listener;
 
-    public void setOnGetTypeClickListener(onGetTypeClickListener listener) {
+    public void setOnGetTypeClickListener(OnGetTypeClickListener listener) {
         this.listener = listener;
     }
 }

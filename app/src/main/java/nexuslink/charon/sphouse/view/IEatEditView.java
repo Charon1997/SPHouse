@@ -12,10 +12,25 @@ import java.util.Date;
  * 修改备注：
  */
 
-public interface IEatEditView {
+public interface IEatEditView extends BaseView {
+    /**
+     * 得到喂食时间
+     *
+     * @return 时间
+     */
     Date getTime();
 
+    /**
+     * 喂食量
+     *
+     * @return 喂食量
+     */
     int getIntake();
 
+    /**
+     * 得到哪一个时间
+     *
+     * @return 位置
+     */
     int getPosition();
 }

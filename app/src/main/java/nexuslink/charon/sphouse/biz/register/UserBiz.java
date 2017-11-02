@@ -1,7 +1,9 @@
 package nexuslink.charon.sphouse.biz.register;
 
 import android.os.CountDownTimer;
+import android.util.Log;
 
+import cn.smssdk.SMSSDK;
 import nexuslink.charon.sphouse.bean.UserBean;
 
 import static java.lang.Thread.sleep;
@@ -43,7 +45,6 @@ public class UserBiz implements IUserBiz {
 
     @Override
     public void getMessageCode(String phoneNum, long second, final OnClickableListener listener) {
-
         CountDownTimer timer = new CountDownTimer(second * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

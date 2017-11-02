@@ -341,4 +341,9 @@ public class DogEditActivity extends BaseActivity implements IDogEditView {
         // 显示
         normalDialog.show();
     }
+
+    @Override
+    public void loading(boolean loading) {
+
+    }
 }

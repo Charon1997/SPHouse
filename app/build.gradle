@@ -22,6 +22,12 @@ android {
         daoPackage 'nexuslink.charon.accountbook.greendao.gen'//这个是生成代码保存的包名
         targetGenDir 'src/main/java'//保存到java代码路径
     }
+
+    repositories{
+        flatDir{
+            dirs 'libs' //就是你放aar的目录地址
+        }
+    }
 }
 
 dependencies {
@@ -38,5 +44,7 @@ dependencies {
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'org.greenrobot:greendao-generator:3.2.2'
     compile 'com.lovedise:permissiongen:0.0.6'
+    compile name:'SMSSDK-3.0.0',ext:'aar'
+    compile name:'SMSSDKGUI-3.0.0',ext:'aar'
     testCompile 'junit:junit:4.12'
 }

@@ -11,7 +11,19 @@ package nexuslink.charon.sphouse.view;
  */
 
 public interface IMainView {
+
+    /**
+     * 添加狗狗
+     */
     void addDog();
+
+    /**
+     * 点击喂食按钮
+     */
     void eat();
+
+    /**
+     * 点击编辑狗狗信息按钮
+     */
     void editDog();
 }

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
 import nexuslink.charon.sphouse.config.Session;
 
 
@@ -27,7 +31,7 @@ import nexuslink.charon.sphouse.config.Session;
  * 修改备注：
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ProgressDialog mProgressDialog;
     /**
@@ -69,7 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         if (null == mView) {
             mContextView = LayoutInflater.from(this)
                     .inflate(bindLayout(), null);
-        } else{
+        } else {
             mContextView = mView;
         }
         if (mAllowFullScreen) {
@@ -82,6 +86,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         if (!isAllowScreenRoate) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+
+
         initView(mContextView);
         setListener();
         doBusiness(this);
@@ -163,8 +169,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * @param mContext
      */
     public abstract void doBusiness(Context mContext);
-
-
 
 
     /**
@@ -280,11 +284,17 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         this.isAllowScreenRoate = isAllowScreenRoate;
     }
 
-    public void loading(boolean loading,String title,String message) {
+    public void loading(boolean loading, String title, String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
         }
         if (loading) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mProgressDialog.dismiss();
+                }
+            }, 7000);
             mProgressDialog.setMessage(message);
             mProgressDialog.setTitle(title);
             mProgressDialog.show();

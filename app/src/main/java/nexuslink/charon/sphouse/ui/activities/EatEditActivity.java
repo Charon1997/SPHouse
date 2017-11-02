@@ -253,4 +253,8 @@ public class EatEditActivity extends BaseActivity implements IEatEditView {
         normalDialog.show();
     }
 
+    @Override
+    public void loading(boolean loading) {
+
+    }
 }

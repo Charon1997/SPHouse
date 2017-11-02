@@ -10,23 +10,60 @@ package nexuslink.charon.sphouse.view;
  * 修改备注：
  */
 
-public interface IRegisterView {
-    public void loading(boolean loading);
+public interface IRegisterView extends BaseView {
 
-    public String getUsername();
+    /**
+     * 得到用户名
+     *
+     * @return 用户名
+     */
+    String getUsername();
 
-    public String getPassword1();
+    /**
+     * 获取密码
+     *
+     * @return 密码
+     */
+    String getPassword1();
 
-    public String getPassword2();
+    /**
+     * 得到确认密码
+     *
+     * @return 确认密码
+     */
+    String getPassword2();
 
-    public String getCode();
+    /**
+     * 得到验证码
+     *
+     * @return 验证码
+     */
+    String getCode();
 
-    public void toast(String msg);
+    /**
+     * toast
+     *
+     * @param msg toast信息
+     */
+    void toast(String msg);
 
-    public void save();
+    /**
+     * 保存
+     */
+    void save();
 
-    public void buttonClickable(boolean clickable);
+    /**
+     * 能否点击
+     *
+     * @param clickable 能否点击
+     */
+    void buttonClickable(boolean clickable);
 
-    public void setCodeButton(String msg);
+    /**
+     * 设置button信息
+     *
+     * @param msg msg
+     */
+    void setCodeButton(String msg);
 
 }

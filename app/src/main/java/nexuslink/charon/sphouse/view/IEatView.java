@@ -12,12 +12,30 @@ import java.util.Date;
  * 修改备注：
  */
 
-public interface  IEatView {
+public interface IEatView {
 
+    /**
+     * 删除的位置
+     *
+     * @param position 位置
+     */
     void deleteItem(int position);
 
 
-    void toEdit(Date time,int foodIntake,int position,boolean isEdit);
+    /**
+     * 编辑喂食信息
+     *
+     * @param time       时间
+     * @param foodIntake 喂食量
+     * @param position   信息的位置
+     * @param isEdit     是编辑还是新建
+     */
+    void toEdit(Date time, int foodIntake, int position, boolean isEdit);
 
+    /**
+     * 是编辑还是新建的页面
+     *
+     * @param isEdit 是编辑还是新建
+     */
     void toEdit(boolean isEdit);
 }

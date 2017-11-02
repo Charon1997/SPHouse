@@ -2,7 +2,7 @@ package nexuslink.charon.sphouse.view;
 
 /**
  * 项目名称：SPHouse
- * 类描述：
+ * 类描述：重设密码界面
  * 创建人：Charon
  * 创建时间：2017/10/24 22:18
  * 修改人：Charon
@@ -10,17 +10,38 @@ package nexuslink.charon.sphouse.view;
  * 修改备注：
  */
 
-public interface IResetView {
-    public String getPassword1();
+public interface IResetView extends BaseView {
+    /**
+     * 获取密码1
+     *
+     * @return 密码1
+     */
+    String getPassword1();
 
-    public String getPassword2();
+    /**
+     * 获取密码2
+     *
+     * @return 密码2
+     */
+    String getPassword2();
 
-    public String getUsername();
+    /**
+     * 获取用户名
+     *
+     * @return 用户名
+     */
+    String getUsername();
 
-    public void next();
+    /**
+     * 提交
+     */
+    void next();
 
-    public void loading(boolean loading);
-
-    public void toast(String msg);
+    /**
+     * toast
+     *
+     * @param msg toast的msg
+     */
+    void toast(String msg);
 
 }

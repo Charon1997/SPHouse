@@ -192,7 +192,7 @@ public class MainActivity extends BaseActivity
         PermissionGen.with(MainActivity.this)
                 .addRequestCode(100)
                 .permissions(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION
                 ).request();
 
         setSupportActionBar(mToolbar);

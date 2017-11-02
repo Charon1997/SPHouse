@@ -1,5 +1,6 @@
 package nexuslink.charon.sphouse.ui.activities.register;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import kr.co.namee.permissiongen.PermissionGen;
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.bean.UserBean;
 import nexuslink.charon.sphouse.config.Session;
@@ -89,6 +91,12 @@ public class SignInActivity extends BaseActivity implements ISignInView{
     public void doBusiness(Context mContext) {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("登录");
+
+        PermissionGen.with(SignInActivity.this)
+                .addRequestCode(100)
+                .permissions(
+                        Manifest.permission.READ_PHONE_STATE,Manifest.permission.READ_SMS,Manifest.permission.ACCESS_FINE_LOCATION
+                ).request();
     }
 
     @Override
@@ -132,4 +140,6 @@ public class SignInActivity extends BaseActivity implements ISignInView{
         session.put(REGISTER_REGISTER, username);
         startActivity(intent);
     }
+
+
 }
