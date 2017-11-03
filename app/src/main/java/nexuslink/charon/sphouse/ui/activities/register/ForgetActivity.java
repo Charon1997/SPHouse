@@ -23,9 +23,13 @@ import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.UserPresenter;
 import nexuslink.charon.sphouse.ui.activities.BaseActivity;
+import nexuslink.charon.sphouse.utils.SystemUtil;
 import nexuslink.charon.sphouse.view.IForgetView;
 
+import static nexuslink.charon.sphouse.config.Constant.CODE_GET_SMART_COMPLETE;
+import static nexuslink.charon.sphouse.config.Constant.CODE_GET_SMS_COMPLETE;
 import static nexuslink.charon.sphouse.config.Constant.CODE_LENGTH;
+import static nexuslink.charon.sphouse.config.Constant.CODE_SUBMIT_COMPLETE;
 import static nexuslink.charon.sphouse.config.Constant.COUNT_DOWN_TIME;
 import static nexuslink.charon.sphouse.config.Constant.CURRENT_TIME;
 import static nexuslink.charon.sphouse.config.Constant.FORGET_NUM;
@@ -56,16 +60,16 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 1:
+                case CODE_SUBMIT_COMPLETE:
                     loading(false);
                     Intent intent = new Intent(ForgetActivity.this, ReSetActivity.class);
                     session.put(FORGET_USERNAME, username);
                     startActivity(intent);
                     break;
-                case 2:
+                case CODE_GET_SMART_COMPLETE:
                     presenter.forgetNext(true);
                     break;
-                case 3:
+                case CODE_GET_SMS_COMPLETE:
                     presenter.forgetGetCode(FORGET_NUM);
                     break;
                 case 4:
@@ -87,10 +91,7 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
                 SMSSDK.getVerificationCode("86", getUsername());
                 Log.d("TAG", "getMessageCode: 发送");
                 //收回键盘
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-                }
+                SystemUtil.hideSoftKeyboard((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE),getWindow());
                 break;
             default:
                 break;
@@ -164,7 +165,7 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
                         if (i == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                             //提交验证码成功
                             Message message = new Message();
-                            message.what = 1;
+                            message.what = CODE_SUBMIT_COMPLETE;
                             mHandler.sendMessage(message);
 
                         } else if (i == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
@@ -174,14 +175,12 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
                             if (smart) {
                                 //智能短信
 
-                                message.what = 2;
+                                message.what = CODE_GET_SMART_COMPLETE;
                                 mHandler.sendMessage(message);
-
                             } else {
                                 //短信
-                                message.what = 3;
+                                message.what = CODE_GET_SMS_COMPLETE;
                                 mHandler.sendMessage(message);
-
                             }
                         } else if (i == SMSSDK.EVENT_GET_VOICE_VERIFICATION_CODE) {
                             //语音

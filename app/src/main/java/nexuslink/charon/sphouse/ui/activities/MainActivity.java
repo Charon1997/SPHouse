@@ -139,7 +139,7 @@ public class MainActivity extends BaseActivity
                 mCurrentPager = mViewPager.getCurrentItem();
                 mPopupWindow = new MyPopupWindow(this, MainActivity.this);
                 mPopupWindow.showPopupWindow(LayoutInflater.from(this).inflate(R.layout.viewpager_main, null));
-                mPopupWindow.setOnGetTypeClickListener(new MyPopupWindow.onGetTypeClickListener() {
+                mPopupWindow.setOnGetTypeClickListener(new MyPopupWindow.OnGetTypeClickListener() {
                     @Override
                     public void getType(int type) {
                         MainActivity.this.type = type;

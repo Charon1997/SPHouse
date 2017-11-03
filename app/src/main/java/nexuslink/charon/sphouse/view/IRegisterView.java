@@ -66,4 +66,10 @@ public interface IRegisterView extends BaseView {
      */
     void setCodeButton(String msg);
 
+    /**
+     * 错误提示
+     * @param msg msg
+     */
+    void error(String msg);
+
 }

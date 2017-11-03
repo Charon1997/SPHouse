@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -15,6 +16,7 @@ import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.UserPresenter;
 import nexuslink.charon.sphouse.ui.activities.BaseActivity;
 import nexuslink.charon.sphouse.ui.activities.MainActivity;
+import nexuslink.charon.sphouse.utils.SystemUtil;
 import nexuslink.charon.sphouse.view.ISignInView;
 
 import static nexuslink.charon.sphouse.config.Constant.REGISTER_FORGET;
@@ -48,6 +50,7 @@ public class SignInActivity extends BaseActivity implements ISignInView{
                 presenter.register();
                 break;
             case R.id.signin_signin_button:
+                SystemUtil.hideSoftKeyboard((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE),getWindow());
                 presenter.signIn();
                 break;
             default:

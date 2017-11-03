@@ -6,12 +6,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import nexuslink.charon.sphouse.R;
 import nexuslink.charon.sphouse.config.Session;
 import nexuslink.charon.sphouse.presenter.UserPresenter;
 import nexuslink.charon.sphouse.ui.activities.BaseActivity;
+import nexuslink.charon.sphouse.utils.SystemUtil;
 import nexuslink.charon.sphouse.view.IResetView;
 
 import static nexuslink.charon.sphouse.config.Constant.FORGET_USERNAME;
@@ -87,6 +89,7 @@ public class ReSetActivity extends BaseActivity implements IResetView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_reset_finish:
+                SystemUtil.hideSoftKeyboard((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE),getWindow());
                 presenter.resetFinish();
                 break;
             default:

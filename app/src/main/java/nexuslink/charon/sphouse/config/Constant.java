@@ -61,6 +61,12 @@ public class Constant {
     public static final String COUNT_DOWN_TIME = "COUNT_DOWN_TIME";
     public static final String CURRENT_TIME = "CURRENT_TIME";
 
+    public static final int CODE_ERROR = 0x00;
+    public static final int CODE_SUBMIT_COMPLETE = 0x01;
+    public static final int CODE_GET_SMS_COMPLETE = 0x02;
+    public static final int CODE_GET_SMART_COMPLETE = 0x03;
+    public static final int CODE_GET_VOICE_COMPLETE = 0x04;
+
 
     /**
      * 位数限制
@@ -68,4 +74,6 @@ public class Constant {
     public static final int PHONE_LENGTH = 11;
     public static final int PASSWORD_MIX = 6;
     public static final int CODE_LENGTH = 4;
+
+
 }

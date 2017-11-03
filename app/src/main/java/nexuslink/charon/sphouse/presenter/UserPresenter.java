@@ -101,10 +101,15 @@ public class UserPresenter {
     }
 
 
+    /**
+     * 忘记密码界面获取code
+     *
+     * @param time 倒计时时间
+     */
     public void forgetGetCode(long time) {
         if (forgetView.getUsername().length() == PHONE_LENGTH) {
             forgetView.buttonClickable(false);
-            userBiz.getMessageCode(forgetView.getUsername(),time, new OnClickableListener() {
+            userBiz.getMessageCode(forgetView.getUsername(), time, new OnClickableListener() {
                 @Override
                 public void canClick() {
                     forgetView.buttonClickable(true);
@@ -117,17 +122,23 @@ public class UserPresenter {
                 }
             });
         } else {
-            forgetView.toast("请输入正确的手机号");
+            forgetView.error("请输入正确的手机号");
         }
-
-        //forgetView.getCodeButton(forgetView.getUsername());
     }
 
 
+    /**
+     * 忘记密码完成检验
+     *
+     * @param smart 是否为智能检验
+     */
     public void forgetNext(boolean smart) {
-        forgetView.next(forgetView.getUsername(), forgetView.getCode(),smart);
+        forgetView.next(forgetView.getUsername(), forgetView.getCode(), smart);
     }
 
+    /**
+     * 重设密码
+     */
     public void resetFinish() {
         if (resetView.getPassword1().equals(resetView.getPassword2())) {
             resetView.loading(true);
@@ -161,10 +172,15 @@ public class UserPresenter {
     }
 
 
+    /**
+     * 注册界面获取code
+     *
+     * @param time 倒计时时长
+     */
     public void registerGetCode(long time) {
         if (registerView.getUsername().length() == PHONE_LENGTH) {
             registerView.buttonClickable(false);
-            userBiz.getMessageCode(registerView.getUsername(),time, new OnClickableListener() {
+            userBiz.getMessageCode(registerView.getUsername(), time, new OnClickableListener() {
                 @Override
                 public void canClick() {
                     registerView.buttonClickable(true);
@@ -177,28 +193,14 @@ public class UserPresenter {
                 }
             });
         } else {
-            registerView.toast("请输入正确的手机号");
+            registerView.error("请输入正确的手机号");
         }
     }
 
+    /**
+     * 注册的保存
+     */
     public void registerSave() {
-        if (registerView.getUsername().length() != PHONE_LENGTH) {
-            registerView.toast("电话号码不正确");
-            return;
-        }
-        if (registerView.getCode().length() != CODE_LENGTH) {
-            registerView.toast("验证码不正确");
-            return;
-        }
-        if (registerView.getPassword1().length() < PASSWORD_MIX || registerView.getPassword2().length() < PASSWORD_MIX) {
-            registerView.toast("密码不能低于6位");
-            return;
-        }
-
-        if (!registerView.getPassword1().equals(registerView.getPassword2())) {
-            registerView.toast("输入密码不一致");
-            return;
-        }
         registerView.loading(true);
         userBiz.registerSave(registerView.getUsername(), registerView.getPassword1(), registerView.getCode(), new OnResetListener() {
             @Override
@@ -218,13 +220,11 @@ public class UserPresenter {
                     @Override
                     public void run() {
                         registerView.loading(false);
-                        registerView.toast("注册失败");
+                        registerView.error("注册失败");
                     }
                 });
 
             }
         });
     }
-
-
 }
